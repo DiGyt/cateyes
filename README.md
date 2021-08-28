@@ -1,5 +1,5 @@
 
-<img src="/files/imgs/cateye_logo_long.png" alt="CatEye logo" height="150"/>
+<img src="/files/imgs/cateye_header.png" alt="CatEye logo" height="150"/>
 
 ___
 ### Categorization for Eyetracking
