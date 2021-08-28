@@ -1,6 +1,6 @@
 
-<img src="/files/imgs/cateye_logo_long.png" alt="CatEye logo" height="100"/>
+<img src="/files/imgs/cateye_logo_long.png" alt="CatEye logo" height="200"/>
+___
 
-# CatEye
 Simple Categorization for Eyetracking
 
