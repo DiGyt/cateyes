@@ -4,7 +4,7 @@
 ___
 ### Unified Categorization for Eyetracking
 
-This repository was developed for Peter König's Lab at the Institute of Cognitive Science, Osnabrück and should provide an easy and universally applicable tool to try out different automated classsification Algorithms for Eyetracking.
+This repository was developed for Peter König's Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms for Eyetracking and to generate a simplistic, flexible, and elegant way of handling Eyetracking data.
 
 - [Installation](#installation)
 - [Documentation](#documentation)
