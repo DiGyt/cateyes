@@ -68,11 +68,17 @@ def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=T
     return ax
 
 
-def plot_trajectory(x, y, times, segments=None, show_legend=True, show_dots=True, show_clean=True,
-                    alpha_decay=0., color_dict=None, ax=None, plot_kwargs={}, dot_kwargs={}):
+def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True,
+                    show_dots=False, alpha_decay=0., color_dict=None, ax=None, plot_kwargs={},
+                    dot_kwargs={}, arrow_kwargs={}):
+    
+    if show_arrows == True and show_clean == False:
+        raise ValueError("If show_arrows = True, then show_clean must be True.")
     
     if "marker" not in dot_kwargs.keys():
         dot_kwargs["marker"] = "."
+    if "head_width" not in arrow_kwargs.keys():
+        arrow_kwargs["head_width"] = 0.1
     
     if ax == None:
         ax = plt.gca()
@@ -89,18 +95,25 @@ def plot_trajectory(x, y, times, segments=None, show_legend=True, show_dots=True
         # add multiple plot lines for each segment
         zip_seg = zip(segments[0][:-1], segments[0][1:], segments[1][:-1])
         alpha = 1
-        for start, stop, cl in zip_seg:
+        for start, stop, cl in reversed(list(zip_seg)):
             select = np.logical_and(times >= start, times <= stop)
             x_sel = x[select]
             y_sel = y[select]
             if show_clean and cl in ['Fixation', 'Saccade', 'ISaccade'] and len(x_sel) > 0:
-                ax.plot([x_sel[0], x_sel[-1]], [y_sel[0], y_sel[-1]], c=color_dict[cl], alpha=alpha, **plot_kwargs)
+                if show_arrows and cl in ['Saccade', 'ISaccade']:
+                    ax.arrow(x_sel[0], y_sel[0], x_sel[-1] - x_sel[0], y_sel[-1] - y_sel[0],
+                             color=color_dict[cl], length_includes_head=True, alpha=alpha,
+                             **arrow_kwargs)
+                else:
+                    ax.plot([x_sel[0], x_sel[-1]], [y_sel[0], y_sel[-1]],
+                            c=color_dict[cl], alpha=alpha, **plot_kwargs)
             else:
                 ax.plot(x_sel, y_sel, c=color_dict[cl], alpha=alpha, **plot_kwargs)
                 
             if show_dots and len(x_sel) > 0:
                 ax.plot(x_sel[-1], y_sel[-1], c=color_dict[cl], alpha=alpha, **dot_kwargs)
-            alpha -= alpha_decay
+            if len(x_sel) > 0:
+                alpha -= alpha_decay
         
         # define the values for our legend
         color_dict = {key:val for key, val in color_dict.items() if key in segments[1]}
