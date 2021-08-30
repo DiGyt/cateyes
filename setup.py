@@ -8,6 +8,15 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+def package_files(directory):
+    paths = []
+    for (path, directories, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append(os.path.join('..', path, filename))
+    return paths
+
+extra_files = package_files('files/data')
+
 setup(
     name = "cateye",
     version = "0.0.2",
@@ -21,7 +30,8 @@ setup(
     #packages=['cateye', 'files', 'data'],
     packages = find_packages(),
     include_package_data=True,
-    package_data = {'cateye': ['*.csv'],
+    package_data = {'': extra_files,
+                    'cateye': ['*.csv'],
                    'files': ['*.csv', 'data/*.csv'],
                    'data': ['*.csv']},
     long_description=read('README.md'),
