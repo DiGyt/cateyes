@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # Utility function to read the README file.
 # Used for the long_description.  It's nice, because now 1) we have a top level
@@ -7,15 +7,6 @@ from setuptools import setup, find_packages
 # string in below ...
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-def package_files(directory):
-    paths = []
-    for (path, directories, filenames) in os.walk(directory):
-        for filename in filenames:
-            paths.append(os.path.join('..', path, filename))
-    return paths
-
-extra_files = package_files('cateye/data')
 
 setup(
     name = "cateye",
@@ -27,13 +18,8 @@ setup(
     license = "BSD",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/CatEye",
-    #packages=['cateye', 'files', 'data'],
+    packages=['cateye'],
     packages = find_packages(),
-    include_package_data=True,
-    package_data = {'': extra_files,
-                    'cateye': ['*.csv'],
-                   'files': ['*.csv', 'data/*.csv'],
-                   'data': ['*.csv']},
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
