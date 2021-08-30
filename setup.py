@@ -19,7 +19,6 @@ setup(
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/CatEye",
     packages=['cateye'],
-    package_data={'': ['*.csv', 'files/data/*.csv']},
     include_package_data=True,
     long_description=read('README.md'),
     classifiers=[
