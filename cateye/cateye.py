@@ -34,7 +34,7 @@ def sample_data_path(name):
     #data_path = op.join(data_dir, name + ".csv")
     #return op.abspath(data_path)
     import pkg_resources
-    return pkg_resources.resource_filename('cateye', 'files/data/' + name + '.csv')
+    return pkg_resources.resource_filename('cateye', 'data/' + name + '.csv')
     
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
