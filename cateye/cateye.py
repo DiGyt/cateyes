@@ -29,10 +29,12 @@ DATA_PATHS = {"example_data": "example_data.csv",
 
 def sample_data_path(name):
     """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
-    import os.path as op
-    data_dir = op.join(op.dirname(__file__), "..", "files", "data")
-    data_path = op.join(data_dir, name + ".csv")
-    return op.abspath(data_path)
+    #import os.path as op
+    #data_dir = op.join(op.dirname(__file__), "..", "files", "data")
+    #data_path = op.join(data_dir, name + ".csv")
+    #return op.abspath(data_path)
+    import pkg_resources
+    return pkg_resources.resource_filename('cateye', 'files/data/' + name + '.csv')
     
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):

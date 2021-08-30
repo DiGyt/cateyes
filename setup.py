@@ -18,8 +18,9 @@ setup(
     license = "BSD",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/CatEye",
-    packages=['cateye'],
+    packages=['cateye', 'files'],
     include_package_data=True,
+    package_data={"": ["*.csv"]},
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
