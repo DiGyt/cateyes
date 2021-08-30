@@ -26,9 +26,18 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        "numpy>=1.14"
+        "numpy>=1.14",
+        "scipy",
         "remodnav",
-        "-e git+https://github.com/pupil-labs/nslr.git",
-        "-e https://github.com/pupil-labs/nslr-hmm.git"
+        #"nslr @ git+https://gitlab.com/nslr/nslr@master",
+        "nslr @ git+https://github.com/pupil-labs/nslr",
+        #"nslr @ git+https://github.com/pupil-labs/nslr@master#egg=package-1.0",
+        #"nslr @ git+https://gitlab.com/nslr/nslr@master#egg=nslr",
+        #"git://github.com/pupil-labs/nslr.git#egg=nslr",
+        #"nslr @ git+https://github.com/pupil-labs/nslr@master#egg=nslr==0.0.5",
+        #"nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm@master#egg=nslr_hmm",
+        "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
+        #"git+https://github.com/pupil-labs/nslr.git",
+        #"git+https://github.com/pupil-labs/nslr-hmm.git",
     ],
 )
