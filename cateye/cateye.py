@@ -23,8 +23,19 @@ REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
                    "HPSO":"PSO" , "LPSO":"PSO",
                    "IHPS":"PSO", "ILPS":"PSO"}
 
+DATA_PATHS = {"example_data": "example_data.csv",
+              "example_events": "example_events.csv",
+              "test_full": "test_data_full.csv"}
+
+def sample_data_path(name):
+    """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
+    import os.path as op
+    data_dir = op.join(op.dirname(__file__), "..", "files", "data")
+    data_path = op.join(data_dir, name + ".csv")
+    return op.abspath(data_path)
     
-def classify_nslr_hmm(x, y, time, return_discrete=False, return_segment_dict=False, **nslr_kwargs):
+    
+def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
     """Uses NSLR-HMM to predict gaze and returns segments and predicted classes."""
     
     # extract gaze and time array
@@ -46,7 +57,7 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_segment_dict=Fal
     # add the prediction to our dataframe
     classes = [CLASSES[i] for i in classes]
     
-    if return_segment_dict:
+    if return_orig_output:
         # create dictionary from it
         segment_dict = {"sample_class": sample_class, "segmentation": seg, "seg_class":seg_class}
         return segments, classes, segment_dict
@@ -54,7 +65,7 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_segment_dict=Fal
         return segments, classes
     
     
-def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_remodnav_events=False,
+def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_output=False,
                       classifier_kwargs={}, preproc_kwargs={}, process_kwargs={},
                       simple_output=False):
     """Uses Remodnav to predict gaze and returns segments and predicted classes."""
@@ -88,7 +99,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_remodnav
         segments, classes = discrete_to_continuous(times, segments, classes)
     
     # return
-    if return_remodnav_events:
+    if return_orig_output:
         return segments, classes, events
     else:
         return segments, classes

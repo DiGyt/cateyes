@@ -41,4 +41,4 @@ def continuous_to_discrete(times, indices, values):
 
 def sfreq_to_times(gaze_array, sfreq, start_time=0):
     """Creates a times array from the sampling frequency (in Hertz)."""
-    return np.arange(0, len(gaze_array), 1. / sfreq) + start_time
+    return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time

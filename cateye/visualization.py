@@ -123,7 +123,7 @@ def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=Tru
     leg_indicators = list(color_dict.keys())
           
     if show_legend:
-        ax.legend(leg_artists, leg_indicators, loc="lower right", title="Gaze Classification")
+        ax.legend(leg_artists, leg_indicators, title="Gaze Classification")
                 
     return ax
 
