@@ -15,7 +15,7 @@ def package_files(directory):
             paths.append(os.path.join('..', path, filename))
     return paths
 
-extra_files = package_files('files/data')
+extra_files = package_files('cateye/data')
 
 setup(
     name = "cateye",
