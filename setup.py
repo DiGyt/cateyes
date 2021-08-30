@@ -10,7 +10,8 @@ def read(fname):
 
 setup(
     name = "cateye",
-    version = "0.0.1",
+    version = "0.0.2",
+
     author = "Dirk Gütlin",
     author_email = "dirk.guetlin@gmail.com",
     description = ("Uniform Categorization of Eyetracking in Python."),
@@ -23,5 +24,11 @@ setup(
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
+    ],
+    install_requires=[
+        "numpy>=1.14"
+        "remodnav",
+        "-e git+https://github.com/pupil-labs/nslr.git",
+        "-e https://github.com/pupil-labs/nslr-hmm.git"
     ],
 )
