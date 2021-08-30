@@ -20,6 +20,7 @@ setup(
     url = "https://github.com/DiGyt/CatEye",
     #packages=['cateye', 'cateye_data', 'cateye_data.data'],
     packages=find_packages(),
+    include_package_data=True,
     package_data = {'':['*.csv'],},
     long_description=read('README.md'),
     classifiers=[
