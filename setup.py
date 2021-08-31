@@ -19,6 +19,7 @@ setup(
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/CatEye",
     packages=['cateye'],
+    include_package_data=True,
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
