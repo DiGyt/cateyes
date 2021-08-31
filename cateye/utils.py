@@ -1,8 +1,48 @@
+# this is commented text added at the beginning of utils
+#
+#
+# some more lines just to be sure
+#
+"""
+This is docstring text added at the beginning of utils
+
+
+
+also can do some more lines here
+create docs like this:
+
+pdoc --html --output-dir documentation cateye --forc
+
+"""
+
 import numpy as np
 
 
 def discrete_to_continuous(times, discrete_times, discrete_values):
-    """Matches an array of discrete events to a continuous time series."""
+    """Matches an array of discrete events to a continuous time series.
+    
+    Parameters
+    ----------
+    times : array of (float, int)
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording.
+    discrete_times : array of (float, int)
+        A 1D-array representing discrete timepoints at which a specific
+        event occurs. Is used to map `discrete_values` onto `times`.
+    discrete_values : array
+        A 1D-array containing the event description or values 
+        corresponding to `discrete_times`. Must be the same length as 
+        `discrete_times`.
+        
+    Returns
+    -------
+    indices : array of int
+        Array of length len(times) corresponding to the event index 
+        of the discrete events mapped onto the sampling times.
+    values : array
+        Array of length len(times) corresponding to the event values
+        or descriptions of the discrete events.
+    """
     
     # sort the discrete events by time
     time_val_sorted = sorted(zip(discrete_times, discrete_values))

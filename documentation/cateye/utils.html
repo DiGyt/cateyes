@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>cateye.utils API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="This is docstring text added at the beginning of utils …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,15 +22,54 @@
 <h1 class="title">Module <code>cateye.utils</code></h1>
 </header>
 <section id="section-intro">
+<p>This is docstring text added at the beginning of utils</p>
+<p>also can do some more lines here</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import numpy as np
+<pre><code class="python"># this is commented text added at the beginning of utils
+#
+#
+# some more lines just to be sure
+#
+&#34;&#34;&#34;
+This is docstring text added at the beginning of utils
+
+
+
+also can do some more lines here
+
+&#34;&#34;&#34;
+
+import numpy as np
 
 
 def discrete_to_continuous(times, discrete_times, discrete_values):
-    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.&#34;&#34;&#34;
+    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.
+    
+    Parameters
+    ----------
+    times : array of (float, int)
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording.
+    discrete_times : array of (float, int)
+        A 1D-array representing discrete timepoints at which a specific
+        event occurs. Is used to map `discrete_values` onto `times`.
+    discrete_values : array
+        A 1D-array containing the event description or values 
+        corresponding to `discrete_times`. Must be the same length as 
+        `discrete_times`.
+        
+    Returns
+    -------
+    indices : array of int
+        Array of length len(times) corresponding to the event index 
+        of the discrete events mapped onto the sampling times.
+    values : array
+        Array of length len(times) corresponding to the event values
+        or descriptions of the discrete events.
+    &#34;&#34;&#34;
     
     # sort the discrete events by time
     time_val_sorted = sorted(zip(discrete_times, discrete_values))
@@ -137,13 +176,58 @@ def pixel_to_deg(x, screen_size, screen_res, viewing_dist, return_factor=False):
 <span>def <span class="ident">discrete_to_continuous</span></span>(<span>times, discrete_times, discrete_values)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Matches an array of discrete events to a continuous time series.</p></div>
+<div class="desc"><p>Matches an array of discrete events to a continuous time series.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
+<dd>A 1D-array representing the sampling times of the continuous
+eyetracking recording.</dd>
+<dt><strong><code>discrete_times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
+<dd>A 1D-array representing discrete timepoints at which a specific
+event occurs. Is used to map <code>discrete_values</code> onto <code>times</code>.</dd>
+<dt><strong><code>discrete_values</code></strong> :&ensp;<code>array</code></dt>
+<dd>A 1D-array containing the event description or values
+corresponding to <code>discrete_times</code>. Must be the same length as
+<code>discrete_times</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>indices</code></strong> :&ensp;<code>array</code> of <code>int</code></dt>
+<dd>Array of length len(times) corresponding to the event index
+of the discrete events mapped onto the sampling times.</dd>
+<dt><strong><code>values</code></strong> :&ensp;<code>array</code></dt>
+<dd>Array of length len(times) corresponding to the event values
+or descriptions of the discrete events.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def discrete_to_continuous(times, discrete_times, discrete_values):
-    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.&#34;&#34;&#34;
+    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.
+    
+    Parameters
+    ----------
+    times : array of (float, int)
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording.
+    discrete_times : array of (float, int)
+        A 1D-array representing discrete timepoints at which a specific
+        event occurs. Is used to map `discrete_values` onto `times`.
+    discrete_values : array
+        A 1D-array containing the event description or values 
+        corresponding to `discrete_times`. Must be the same length as 
+        `discrete_times`.
+        
+    Returns
+    -------
+    indices : array of int
+        Array of length len(times) corresponding to the event index 
+        of the discrete events mapped onto the sampling times.
+    values : array
+        Array of length len(times) corresponding to the event values
+        or descriptions of the discrete events.
+    &#34;&#34;&#34;
     
     # sort the discrete events by time
     time_val_sorted = sorted(zip(discrete_times, discrete_values))
