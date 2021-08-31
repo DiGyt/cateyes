@@ -42,3 +42,29 @@ def continuous_to_discrete(times, indices, values):
 def sfreq_to_times(gaze_array, sfreq, start_time=0):
     """Creates a times array from the sampling frequency (in Hertz)."""
     return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time
+
+
+def pixel_to_deg(x, screen_size, screen_res, viewing_dist, return_factor=False):
+    """Converts pixels (or any other spatial gaze coordinates) to degrees."""
+    msg = "If x has more than 1 dimension, screen_size/screen_res " \
+    "must be iterable objects with the same length as x."
+    x = np.array(x)
+    lengthy = all([hasattr(screen_size, '__len__'),
+                   hasattr(screen_res, '__len__')])
+    if x.ndim > 1:
+        if lengthy:
+            if not (len(x) == len(screen_size) == len(screen_res)):
+                raise ValueError(msg)
+        else:
+            raise ValueError(msg)
+    else:
+        if lengthy and not (1 == len(screen_size) == len(screen_res)):
+            raise ValueError("Multiple screen_size or screen_res " \
+                            "were passed for only one gaze series x.")
+
+    arctan = np.arctan2(np.array(screen_size) / 2., viewing_dist)
+    factor = np.degrees(arctan / (np.array(screen_res) / 2.))
+    if return_factor:
+        return x * factor, factor
+    else:
+        return x * np.array([factor]).T
