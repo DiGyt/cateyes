@@ -57,6 +57,9 @@ N_COLS = {&#39;Fixation&#39;: &#39;blue&#39;,
 
 def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=True,
                       show_legend=True, color_dict=None, ax=None):
+    &#34;&#34;&#34;Plots a gaze time series colored by discrete segments and annotated with 
+    discrete events.
+    &#34;&#34;&#34;
     
     if ax == None:
         ax = plt.gca()
@@ -107,6 +110,8 @@ def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=T
 def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True,
                     show_dots=False, alpha_decay=0., color_dict=None, ax=None, plot_kwargs={},
                     dot_kwargs={}, arrow_kwargs={}):
+    &#34;&#34;&#34;Plots a spatial gaze trajectory colored by discrete segments, e.g. according to
+    gaze classification.&#34;&#34;&#34;
     
     if show_arrows == True and show_clean == False:
         raise ValueError(&#34;If show_arrows = True, then show_clean must be True.&#34;)
@@ -322,13 +327,17 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
 <span>def <span class="ident">plot_segmentation</span></span>(<span>gaze, times, segments=None, events=None, show_event_text=True, show_legend=True, color_dict=None, ax=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Plots a gaze time series colored by discrete segments and annotated with
+discrete events.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=True,
                       show_legend=True, color_dict=None, ax=None):
+    &#34;&#34;&#34;Plots a gaze time series colored by discrete segments and annotated with 
+    discrete events.
+    &#34;&#34;&#34;
     
     if ax == None:
         ax = plt.gca()
@@ -380,7 +389,8 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
 <span>def <span class="ident">plot_trajectory</span></span>(<span>x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True, show_dots=False, alpha_decay=0.0, color_dict=None, ax=None, plot_kwargs={}, dot_kwargs={}, arrow_kwargs={})</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Plots a spatial gaze trajectory colored by discrete segments, e.g. according to
+gaze classification.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -388,6 +398,8 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
 <pre><code class="python">def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True,
                     show_dots=False, alpha_decay=0., color_dict=None, ax=None, plot_kwargs={},
                     dot_kwargs={}, arrow_kwargs={}):
+    &#34;&#34;&#34;Plots a spatial gaze trajectory colored by discrete segments, e.g. according to
+    gaze classification.&#34;&#34;&#34;
     
     if show_arrows == True and show_clean == False:
         raise ValueError(&#34;If show_arrows = True, then show_clean must be True.&#34;)

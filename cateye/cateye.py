@@ -1,5 +1,5 @@
 """
-In `cateye.cateye` you can find all available classification 
+In cateye.cateye you can find all available classification 
 algorithms.
 """
 

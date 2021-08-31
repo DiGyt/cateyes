@@ -38,7 +38,7 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
         Array of length len(times) corresponding to the event values
         or descriptions of the discrete events.
         
-    Examples
+    Example
     --------
     >>> times = np.array([0., 0.1, 0.2, 0.3])
     >>> dis_times, dis_values = [0.2], ["Saccade"]

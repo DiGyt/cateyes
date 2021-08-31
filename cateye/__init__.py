@@ -1,14 +1,8 @@
 """
 Wecome to the CatEye documentation.
 
-In `cateye.cateye` you will find the set of available classification 
-algorithms.
-
-In `cateye.utils` you will find utility functions to convert and handle 
-data.
-
-In `cateye.visualization` you will find functions to plot and visualize
-the classified Eyetracking data.
+You find the documentation to all available functions by clicking on
+the respective submodules.
 
 """
 

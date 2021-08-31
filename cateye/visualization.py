@@ -26,6 +26,9 @@ N_COLS = {'Fixation': 'blue',
 
 def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=True,
                       show_legend=True, color_dict=None, ax=None):
+    """Plots a gaze time series colored by discrete segments and annotated with 
+    discrete events.
+    """
     
     if ax == None:
         ax = plt.gca()
@@ -76,6 +79,8 @@ def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=T
 def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True,
                     show_dots=False, alpha_decay=0., color_dict=None, ax=None, plot_kwargs={},
                     dot_kwargs={}, arrow_kwargs={}):
+    """Plots a spatial gaze trajectory colored by discrete segments, e.g. according to
+    gaze classification."""
     
     if show_arrows == True and show_clean == False:
         raise ValueError("If show_arrows = True, then show_clean must be True.")
