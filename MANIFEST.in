@@ -1,3 +1,6 @@
 include cateye/example_data.csv
 include cateye/data/*.csv
+include cateye/data/example_data.csv
+include cateye/data/example_events.csv
+include cateye/data/test_data_full.csv
 include files/data/*.csv
