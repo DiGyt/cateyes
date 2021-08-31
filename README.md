@@ -49,6 +49,6 @@ This notebook gives a more extensive example on CatEye, including data organisat
 
  #TODO
 
-[Documentation](https://htmlpreview.github.io/?https://github.com/DiGyt/cateye/blob/35d86b3c1e4c274f4bd15a6cb5feb3b640bd2898/documentation/cateye/index.html)
+[Documentation](https://htmlpreview.github.io/?https://github.com/DiGyt/cateye/blob/main/documentation/cateye/index.html)
 
 !pdoc --html --output-dir documentation cateye
