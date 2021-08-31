@@ -2,7 +2,7 @@
 <img src="/files/imgs/cateye_header.png" alt="CatEye logo" height="100"/>
 
 ___
-### Unified Categorization for Eyetracking
+### Categorization for Eyetracking in Python
 
 This repository was developed for Peter König's Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a simplistic, flexible, and elegant way of handling Eyetracking data.
 
