@@ -1,0 +1,54 @@
+Timestamp,Name
+70.48039,instruction
+77.00052,biflicker
+78.51971,biflicker
+80.03895,biflicker
+81.55901,biflicker
+83.07721,biflicker
+84.59649,biflicker
+86.50732420000001,vertical biflicker
+88.01624,vertical biflicker
+89.5336761,vertical biflicker
+91.05278,vertical biflicker
+92.57202,vertical biflicker
+94.0918655,vertical biflicker
+95.61164000000001,vertical biflicker
+98.52659609999999,hopping
+99.53209,hopping
+100.54774499999999,hopping
+101.55291,hopping
+102.569496,hopping
+103.575,hopping
+104.592026,hopping
+105.59661100000001,hopping
+106.61315900000001,hopping
+107.6185,hopping
+111.55145300000001,hopping 3D
+113.06961799999999,hopping 3D
+114.588669,hopping 3D
+116.1087,hopping 3D
+117.627068,hopping 3D
+119.14626299999999,hopping 3D
+120.665451,hopping 3D
+122.184509,hopping 3D
+123.704376,hopping 3D
+125.044975,sine
+130.5513,sine
+136.058853,sine
+139.733963,sine
+139.756226,diverge
+143.43066399999995,diverge
+147.105682,diverge
+150.76933300000005,instruction
+162.8233,velo horizontal
+173.8369,velo vertical
+184.86128200000002,instruction
+205.60548400000002,antisaccade
+207.113,antisaccade
+208.832977,antisaccade
+210.3417,antisaccade
+212.06126400000002,antisaccade
+213.569229,antisaccade
+215.28949,antisaccade
+216.79759199999998,antisaccade
+218.51767,antisaccade
