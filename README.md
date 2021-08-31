@@ -6,6 +6,12 @@ ___
 
 This repository was developed for Peter König's Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a simplistic, flexible, and elegant way of handling Eyetracking data.
 
+Currently available gaze classification algorithms are:
+- [NSLR-HMM](https://github.com/pupil-labs/nslr-hmm): Pekkanen, J., & Lappi, O. (2017). A new and general approach to signal denoising and eye movement classification based on segmented linear regression. Scientific reports, 7(1), 1-13.
+- [REMoDNaV](https://github.com/psychoinformatics-de/remodnav): Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: Robust Eye Movement Detection for Natural Viewing. bioRxiv. DOI: 10.1101/619254 (first two authors contributed equally)
+
+Of course we will aim to include more gaze classification algorithms in the future. Suggestions and links to implementations are always welcome.
+
 - [Installation](#installation)
 - [Examples](#examples)
 - [Documentation](#documentation)
