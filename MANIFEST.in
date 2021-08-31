@@ -1,6 +1,3 @@
-include cateye/xdat_test_data_full.csv
-include cateye/xdat_example_data.csv
-include cateye/xdat_example_events.csv
 include data/test_data_full.csv
 include data/example_data.csv
 include data/example_events.csv

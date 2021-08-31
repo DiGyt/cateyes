@@ -23,16 +23,14 @@ REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
                    "HPSO":"PSO" , "LPSO":"PSO",
                    "IHPS":"PSO", "ILPS":"PSO"}
 
-DATA_PATHS = {"example_data": "example_data.csv",
-              "example_events": "example_events.csv",
-              "test_full": "test_data_full.csv"}
 
 def sample_data_path(name):
     """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
     import os.path as op
-    #data_dir = op.join(op.dirname(__file__), "..", "files", "data")
-    data_dir = op.join(op.dirname(__file__))
-    data_path = op.join(data_dir, "xdat_" + name + ".csv")
+    data_dir = op.join(op.dirname(__file__), "..", "data")
+    data_path = op.join(data_dir, name + ".csv")
+    #data_dir = op.join(op.dirname(__file__))
+    #data_path = op.join(data_dir, "xdat_" + name + ".csv")
     return op.abspath(data_path)
     
     
