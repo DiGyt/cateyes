@@ -46,7 +46,7 @@ This notebook gives a more extensive example on CatEye, including data organisat
 
 ## Documentation
 
-CatEye's documentation is created using pdoc3 and github's HTML preview. Click on the link below to view the documentation.
+CatEye's documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) and github's HTML preview. Click on the link below to view the documentation.
 
 [Documentation](https://htmlpreview.github.io/?https://github.com/DiGyt/cateye/blob/main/documentation/cateye/index.html)
 
