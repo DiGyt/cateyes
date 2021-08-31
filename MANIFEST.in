@@ -1,2 +1,3 @@
 include cateye/example_data.csv
+include cateye/data/*.csv
 include files/data/*.csv
