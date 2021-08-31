@@ -48,3 +48,6 @@ This notebook gives a more extensive example on CatEye, including data organisat
 ## Documentation
 
  #TODO
+
+
+!pdoc --html --output-dir documentation cateye
