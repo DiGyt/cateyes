@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>cateye API documentation</title>
-<meta name="description" content="This is docstring text added at the init file …" />
+<meta name="description" content="Wecome to the CatEye documentation …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,29 +22,34 @@
 <h1 class="title">Package <code>cateye</code></h1>
 </header>
 <section id="section-intro">
-<p>This is docstring text added at the init file</p>
-<p>let's hope there's something interesting in here-</p>
+<p>Wecome to the CatEye documentation.</p>
+<p>In <code><a title="cateye.cateye" href="cateye.html">cateye.cateye</a></code> you will find the set of available classification
+algorithms.</p>
+<p>In <code><a title="cateye.utils" href="utils.html">cateye.utils</a></code> you will find utility functions to convert and handle
+data.</p>
+<p>In <code><a title="cateye.visualization" href="visualization.html">cateye.visualization</a></code> you will find functions to plot and visualize
+the classified Eyetracking data.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python"># this is commented text added at the init file
-#
-#
-# some more lines just to be sure
-#
+<pre><code class="python">&#34;&#34;&#34;
+Wecome to the CatEye documentation.
+
+In `cateye.cateye` you will find the set of available classification 
+algorithms.
+
+In `cateye.utils` you will find utility functions to convert and handle 
+data.
+
+In `cateye.visualization` you will find functions to plot and visualize
+the classified Eyetracking data.
+
 &#34;&#34;&#34;
-This is docstring text added at the init file
 
-
-
-let&#39;s hope there&#39;s something interesting in here-
-
-&#34;&#34;&#34;
-from .cateye import (classify_nslr_hmm, classify_remodnav,
-                     sample_data_path)
+from .cateye import classify_nslr_hmm, classify_remodnav
 from .utils import (discrete_to_continuous, continuous_to_discrete,
-                    sfreq_to_times, pixel_to_deg)
+                    sfreq_to_times, pixel_to_deg, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,
                             plot_nslr_segmentation)</code></pre>
 </details>
@@ -54,15 +59,17 @@ from .visualization import (plot_segmentation, plot_trajectory,
 <dl>
 <dt><code class="name"><a title="cateye.cateye" href="cateye.html">cateye.cateye</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>In <code><a title="cateye.cateye" href="cateye.html">cateye.cateye</a></code> you can find all available classification
+algorithms.</p></div>
 </dd>
 <dt><code class="name"><a title="cateye.utils" href="utils.html">cateye.utils</a></code></dt>
 <dd>
-<div class="desc"><p>This is docstring text added at the beginning of utils …</p></div>
+<div class="desc"><p>cateye.utils provides utility functions to convert and handle data.</p></div>
 </dd>
 <dt><code class="name"><a title="cateye.visualization" href="visualization.html">cateye.visualization</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>cateye.visualization implements functions to plot and visualize classified
+Eyetracking data.</p></div>
 </dd>
 </dl>
 </section>

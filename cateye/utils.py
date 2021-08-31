@@ -1,21 +1,16 @@
-# this is commented text added at the beginning of utils
-#
-#
-# some more lines just to be sure
-#
 """
-This is docstring text added at the beginning of utils
-
-
-
-also can do some more lines here
-create docs like this:
-
-pdoc --html --output-dir documentation cateye --forc
-
+cateye.utils provides utility functions to convert and handle data.
 """
 
 import numpy as np
+
+
+def sample_data_path(name):
+    """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
+    import os.path as op
+    data_dir = op.join(op.dirname(__file__), "data")
+    data_path = op.join(data_dir, name + ".csv")
+    return op.abspath(data_path)
 
 
 def discrete_to_continuous(times, discrete_times, discrete_values):
@@ -42,6 +37,13 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
     values : array
         Array of length len(times) corresponding to the event values
         or descriptions of the discrete events.
+        
+    Examples
+    --------
+    >>> times = np.array([0., 0.1, 0.2, 0.3])
+    >>> dis_times, dis_values = [0.2], ["Saccade"]
+    >>> discrete_to_continuous(times, dis_times, dis_values)
+    array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
     """
     
     # sort the discrete events by time
@@ -50,12 +52,10 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
     # fill the time series with indices and values
     indices = np.zeros(len(times))
     values = np.empty(len(times), dtype=object)
-    cur_idx = 0
-    for dis_time, dis_val in time_val_sorted:
+    for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
         selected = [times >= dis_time]
-        indices[selected] = cur_idx
+        indices[selected] = idx + 1
         values[selected] = dis_val
-        cur_idx += 1
         
     return indices, values
 

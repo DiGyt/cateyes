@@ -1,3 +1,8 @@
+"""
+In `cateye.cateye` you can find all available classification 
+algorithms.
+"""
+
 import numpy as np
 import nslr_hmm
 from remodnav.clf import EyegazeClassifier
@@ -22,14 +27,6 @@ REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
                    "ISAC":"Saccade", "PURS":"Smooth Pursuit",
                    "HPSO":"PSO" , "LPSO":"PSO",
                    "IHPS":"PSO", "ILPS":"PSO"}
-
-
-def sample_data_path(name):
-    """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
-    import os.path as op
-    data_dir = op.join(op.dirname(__file__), "data")
-    data_path = op.join(data_dir, name + ".csv")
-    return op.abspath(data_path)
     
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):

@@ -1,3 +1,8 @@
+"""
+cateye.visualization implements functions to plot and visualize classified 
+Eyetracking data.
+"""
+
 import numpy as np
 import nslr_hmm
 import matplotlib.pyplot as plt

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>cateye.utils API documentation</title>
-<meta name="description" content="This is docstring text added at the beginning of utils …" />
+<meta name="description" content="cateye.utils provides utility functions to convert and handle data." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,27 +22,24 @@
 <h1 class="title">Module <code>cateye.utils</code></h1>
 </header>
 <section id="section-intro">
-<p>This is docstring text added at the beginning of utils</p>
-<p>also can do some more lines here</p>
+<p>cateye.utils provides utility functions to convert and handle data.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python"># this is commented text added at the beginning of utils
-#
-#
-# some more lines just to be sure
-#
-&#34;&#34;&#34;
-This is docstring text added at the beginning of utils
-
-
-
-also can do some more lines here
-
+<pre><code class="python">&#34;&#34;&#34;
+cateye.utils provides utility functions to convert and handle data.
 &#34;&#34;&#34;
 
 import numpy as np
+
+
+def sample_data_path(name):
+    &#34;&#34;&#34;Load sample data. Possible names are: &#39;example_data&#39;, &#39;example_events&#39; and &#39;test_data_full&#39;.&#34;&#34;&#34;
+    import os.path as op
+    data_dir = op.join(op.dirname(__file__), &#34;data&#34;)
+    data_path = op.join(data_dir, name + &#34;.csv&#34;)
+    return op.abspath(data_path)
 
 
 def discrete_to_continuous(times, discrete_times, discrete_values):
@@ -69,6 +66,13 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
     values : array
         Array of length len(times) corresponding to the event values
         or descriptions of the discrete events.
+        
+    Examples
+    --------
+    &gt;&gt;&gt; times = np.array([0., 0.1, 0.2, 0.3])
+    &gt;&gt;&gt; dis_times, dis_values = [0.2], [&#34;Saccade&#34;]
+    &gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
+    array([0., 1., 1.]), array([None, &#39;Saccade&#39;, &#39;Saccade&#39;])
     &#34;&#34;&#34;
     
     # sort the discrete events by time
@@ -77,12 +81,10 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
     # fill the time series with indices and values
     indices = np.zeros(len(times))
     values = np.empty(len(times), dtype=object)
-    cur_idx = 0
-    for dis_time, dis_val in time_val_sorted:
+    for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
         selected = [times &gt;= dis_time]
-        indices[selected] = cur_idx
+        indices[selected] = idx + 1
         values[selected] = dis_val
-        cur_idx += 1
         
     return indices, values
 
@@ -198,7 +200,13 @@ of the discrete events mapped onto the sampling times.</dd>
 <dt><strong><code>values</code></strong> :&ensp;<code>array</code></dt>
 <dd>Array of length len(times) corresponding to the event values
 or descriptions of the discrete events.</dd>
-</dl></div>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; times = np.array([0., 0.1, 0.2, 0.3])
+&gt;&gt;&gt; dis_times, dis_values = [0.2], [&quot;Saccade&quot;]
+&gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
+array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -227,6 +235,13 @@ or descriptions of the discrete events.</dd>
     values : array
         Array of length len(times) corresponding to the event values
         or descriptions of the discrete events.
+        
+    Examples
+    --------
+    &gt;&gt;&gt; times = np.array([0., 0.1, 0.2, 0.3])
+    &gt;&gt;&gt; dis_times, dis_values = [0.2], [&#34;Saccade&#34;]
+    &gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
+    array([0., 1., 1.]), array([None, &#39;Saccade&#39;, &#39;Saccade&#39;])
     &#34;&#34;&#34;
     
     # sort the discrete events by time
@@ -235,12 +250,10 @@ or descriptions of the discrete events.</dd>
     # fill the time series with indices and values
     indices = np.zeros(len(times))
     values = np.empty(len(times), dtype=object)
-    cur_idx = 0
-    for dis_time, dis_val in time_val_sorted:
+    for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
         selected = [times &gt;= dis_time]
-        indices[selected] = cur_idx
+        indices[selected] = idx + 1
         values[selected] = dis_val
-        cur_idx += 1
         
     return indices, values</code></pre>
 </details>
@@ -280,6 +293,23 @@ or descriptions of the discrete events.</dd>
         return x * np.array([factor]).T</code></pre>
 </details>
 </dd>
+<dt id="cateye.utils.sample_data_path"><code class="name flex">
+<span>def <span class="ident">sample_data_path</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_data_path(name):
+    &#34;&#34;&#34;Load sample data. Possible names are: &#39;example_data&#39;, &#39;example_events&#39; and &#39;test_data_full&#39;.&#34;&#34;&#34;
+    import os.path as op
+    data_dir = op.join(op.dirname(__file__), &#34;data&#34;)
+    data_path = op.join(data_dir, name + &#34;.csv&#34;)
+    return op.abspath(data_path)</code></pre>
+</details>
+</dd>
 <dt id="cateye.utils.sfreq_to_times"><code class="name flex">
 <span>def <span class="ident">sfreq_to_times</span></span>(<span>gaze_array, sfreq, start_time=0)</span>
 </code></dt>
@@ -315,6 +345,7 @@ or descriptions of the discrete events.</dd>
 <li><code><a title="cateye.utils.continuous_to_discrete" href="#cateye.utils.continuous_to_discrete">continuous_to_discrete</a></code></li>
 <li><code><a title="cateye.utils.discrete_to_continuous" href="#cateye.utils.discrete_to_continuous">discrete_to_continuous</a></code></li>
 <li><code><a title="cateye.utils.pixel_to_deg" href="#cateye.utils.pixel_to_deg">pixel_to_deg</a></code></li>
+<li><code><a title="cateye.utils.sample_data_path" href="#cateye.utils.sample_data_path">sample_data_path</a></code></li>
 <li><code><a title="cateye.utils.sfreq_to_times" href="#cateye.utils.sfreq_to_times">sfreq_to_times</a></code></li>
 </ul>
 </li>
