@@ -1,4 +1,3 @@
-
 <img src="/files/imgs/cateye_header.png" alt="CatEye logo" height="100"/>
 
 ___
@@ -47,8 +46,17 @@ This notebook gives a more extensive example on CatEye, including data organisat
 
 ## Documentation
 
- #TODO
+CatEye's documentation is created using github's HTML preview. Click on the link below to view the documentation.
 
 [Documentation](https://htmlpreview.github.io/?https://github.com/DiGyt/cateye/blob/main/documentation/cateye/index.html)
 
-!pdoc --html --output-dir documentation cateye
+And remember that in most Python interfaces, you can print the docstring of a function via e.g. calling
+```python
+import cateye
+cateye.classify_nslr_hmm?
+```
+
+<!-- 
+Note for myself: build the documentation with:
+pdoc --html --output-dir documentation cateye --force 
+-->
