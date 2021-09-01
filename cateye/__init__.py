@@ -1,5 +1,5 @@
 """
-.. image:: files/imgs/cateye_logo.png
+.. image:: ./../../files/imgs/cateye_logo.png
 
 Wecome to the CatEye documentation.
 
