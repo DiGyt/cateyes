@@ -1,4 +1,4 @@
-<img src="/files/imgs/cateye_header.png" alt="CatEye logo" height="100"/>
+<img src="/docs/files/imgs/cateye_header.png" alt="CatEye logo" height="100"/>
 
 ___
 ### Categorization for Eyetracking in Python
