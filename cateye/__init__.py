@@ -1,4 +1,6 @@
 """
+.. image:: files/imgs/cateye_logo.png
+
 Wecome to the CatEye documentation.
 
 You find the documentation to all available functions by clicking on
