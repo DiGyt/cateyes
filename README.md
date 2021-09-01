@@ -59,5 +59,5 @@ cateye.classify_nslr_hmm?
 <!-- 
 Note for myself: build the documentation with:
 cd cateye_head_dir
-pdoc --html --output-dir documentation cateye --force 
+pdoc --html --output-dir docs cateye --force 
 -->
