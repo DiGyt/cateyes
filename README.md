@@ -33,15 +33,15 @@ However, proper PyPI support might follow.
 
 CatEye is intended to work on a simple and intuitive level. This includes reducing all the overhead from external classification algorithms and relying on fundamental Python objects that can be used with whatever data format and workflow you are working.
 ```python
-classification = classify_nslr_hmm(times, gaze_x, gaze_y)
+classification = cateye.lassify_nslr_hmm(times, gaze_x, gaze_y)
 ```
 
 CatEye also provides simple but flexible plotting functions which can be used to visualize classified gaze data and can be further customized with matplotlib.pyplot.
 ```python
 fig, axes = plt.subplots(2, figsize=(15, 6), sharex=True)
-plot_segmentation(gaze_x, times, classification, events, show_event_text=False, 
-                  show_legend=False, ax=axes[0])
-plot_segmentation(gaze_y, times, classification, events, ax=axes[1])
+cateye.plot_segmentation(gaze_x, times, classification, events, ax=axes[0],
+                         show_event_text=False, show_legend=False)
+cateye.plot_segmentation(gaze_y, times, classification, events, ax=axes[1])
 axes[0].set_ylabel("Theta (in degree)")
 axes[1].set_ylabel("Phi (in degree)")
 axes[1].set_xlabel("Time in seconds");
