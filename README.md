@@ -11,7 +11,7 @@ ___
 
 ## Introduction
 
-This repository was developed for Peter König's Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a simplistic, flexible, and elegant way of handling Eyetracking data.
+This repository was developed for Peter König's Neurobiopsychology Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a unified, simplistic, and elegant way of handling Eyetracking data.
 
 Currently available gaze classification algorithms are:
 - [NSLR-HMM](https://github.com/pupil-labs/nslr-hmm): Pekkanen, J., & Lappi, O. (2017). A new and general approach to signal denoising and eye movement classification based on segmented linear regression. Scientific reports, 7(1), 1-13.
@@ -46,9 +46,9 @@ This notebook gives a more extensive example on CatEye, including data organisat
 
 ## Documentation
 
-CatEye's documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) and github's HTML preview. Click on the link below to view the documentation.
+CatEye's documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) and [GitHub Pages](https://pages.github.com/). Click on the link below to view the documentation.
 
-[Documentation](https://htmlpreview.github.io/?https://github.com/DiGyt/cateye/blob/main/documentation/cateye/index.html)
+[Documentation](https://digyt.github.io/cateye/)
 
 And remember that in most Python interfaces, you can print the docstring of a function via e.g. calling
 ```python

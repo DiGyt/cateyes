@@ -6,7 +6,20 @@ import numpy as np
 
 
 def sample_data_path(name):
-    """Load sample data. Possible names are: 'example_data', 'example_events' and 'test_data_full'."""
+    """return the static path to a CatEye sample dataset.
+    
+    Parameters
+    ----------
+    name : str
+        The example file to load. Possible names are: 'example_data',
+        'example_events' and 'test_data_full'.
+   
+    Returns
+    -------
+    data_path : str
+        The absolute path leading to the respective .csv file on your 
+        machine.
+        """
     import os.path as op
     data_dir = op.join(op.dirname(__file__), "data")
     data_path = op.join(data_dir, name + ".csv")
@@ -153,8 +166,9 @@ def pixel_to_deg(x, screen_size, screen_res, viewing_dist, return_factor=False):
     x_converted : array of float
         The gaze array converted to degrees.
     factor : array of float
-        The conversion factor(s) used to convert x (with `x_converted 
-        = x * factor`). Only returned if `return_factor=True`.
+        The conversion factor(s) used to convert x (with 
+        `x_converted  = x * factor`). Only returned if 
+        `return_factor=True`.
         """
     msg = "If x has more than 1 dimension, screen_size/screen_res " \
     "must be iterable objects with the same length as x."
