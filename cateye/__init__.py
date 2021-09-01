@@ -1,7 +1,7 @@
 """
-.. image:: ./../../files/imgs/cateye_logo.png
+.. image:: https://raw.githubusercontent.com/DiGyt/cateye/main/files/imgs/cateye_header.png
 
-Wecome to the CatEye documentation.
+Welcome to the CatEye documentation.
 
 You find the documentation to all available functions by clicking on
 the respective submodules.
