@@ -50,6 +50,8 @@ axes[1].set_xlabel("Time in seconds");
 
 To get started, we recommend going through our example notebooks. You can simply run them via your internet browser (on Google Colab's hosted runtime) by clicking on the "open in Colab" button.
 
+___
+
 ### Minimal use example
 This minimal example applies the NSLR-HMM algorithm to a simple 2D gaze array and plots the results using the cateye plotting functions.
 
