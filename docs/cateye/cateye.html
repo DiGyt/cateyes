@@ -61,7 +61,42 @@ REMODNAV_SIMPLE = {&#34;FIXA&#34;:&#34;Fixation&#34;, &#34;SACC&#34;:&#34;Saccad
     
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
-    &#34;&#34;&#34;Uses NSLR-HMM to predict gaze and returns segments and predicted classes.&#34;&#34;&#34;
+    &#34;&#34;&#34;Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data. Must be 
+        represented in degree units.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data. Must be 
+        represented in degree units.
+    times : array of float
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording (in seconds).
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the `times` array). Default=False.
+    return_orig_output : bool
+        If True, additionally return NSLR-HMM&#39;s original segmentation 
+        object as output. Default=False.
+    **nslr_kwargs
+        Any additional keyword argument will be passed to 
+        nslr_hmm.classify_gaze().
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    segment_dict : dict
+        A dictionary containing the original output from NSLR-HMM: 
+        &#34;sample_class&#34;, &#34;segmentation&#34; and &#34;seg_class&#34;. Only returned if 
+        `return_orig_output = True`.  
+    
+    &#34;&#34;&#34;
     
     # extract gaze and time array
     gaze_array = np.vstack([x, y]).T
@@ -91,9 +126,55 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     
     
 def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_output=False,
-                      classifier_kwargs={}, preproc_kwargs={}, process_kwargs={},
-                      simple_output=False):
-    &#34;&#34;&#34;Uses Remodnav to predict gaze and returns segments and predicted classes.&#34;&#34;&#34;
+                      simple_output=False, classifier_kwargs={}, preproc_kwargs={},
+                      process_kwargs={}):
+    &#34;&#34;&#34;Uses Remodnav to predict gaze and returns segments and predicted classes.
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    times : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    px2deg : float
+        The ratio between one pixel in the recording and one degree. 
+        If `x` and `y` are in degree units, px2deg = 1.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the `times` array). Default=False.
+    return_orig_output : bool
+        If True, additionally return REMoDNaV&#39;s original segmentation 
+        events as output. Default=False.
+    simple_output : bool
+        If True, return a simplified version of REMoDNaV&#39;s output, 
+        containing only the gaze categories: [&#34;Fixation&#34;, &#34;Saccade&#34;,
+        &#34;Smooth Pursuit&#34;, &#34;PSO&#34;]. Default=False.
+    classifier_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf.EyegazeClassifier(). Default={}.
+    preproc_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf.EyegazeClassifier().preproc(). Default={}.
+    process_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf(). Default={}.
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    events : array
+        A record array containing the original output from REMoDNaV.
+        Only returned if `return_orig_output = True`.
+    
+    &#34;&#34;&#34;
+    
     
     times = np.array(time) if hasattr(time, &#39;__iter__&#39;) else np.arange(0, len(x), 1/time)
     if np.std(times[1:] - times[:-1]) &gt; 1e-5:
@@ -141,13 +222,81 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
 <span>def <span class="ident">classify_nslr_hmm</span></span>(<span>x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Uses NSLR-HMM to predict gaze and returns segments and predicted classes.</p></div>
+<div class="desc"><p>Uses NSLR-HMM to predict gaze and returns segments and predicted classes.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the x-axis of your gaze data. Must be
+represented in degree units.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the y-axis of your gaze data. Must be
+represented in degree units.</dd>
+<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the sampling times of the continuous
+eyetracking recording (in seconds).</dd>
+<dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, returns the output in discrete format, if False, in
+continuous format (matching the <code>times</code> array). Default=False.</dd>
+<dt><strong><code>return_orig_output</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, additionally return NSLR-HMM's original segmentation
+object as output. Default=False.</dd>
+<dt><strong><code>**nslr_kwargs</code></strong></dt>
+<dd>Any additional keyword argument will be passed to
+nslr_hmm.classify_gaze().</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>segments</code></strong> :&ensp;<code>array</code> of <code>(int, float)</code></dt>
+<dd>Either the event indices (continuous format) or the event
+times (discrete format), indicating the start of a new segment.</dd>
+<dt><strong><code>classes</code></strong> :&ensp;<code>array</code> of <code>str</code></dt>
+<dd>The predicted class corresponding to each element in <code>segments</code>.</dd>
+<dt><strong><code>segment_dict</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary containing the original output from NSLR-HMM:
+"sample_class", "segmentation" and "seg_class". Only returned if
+<code>return_orig_output = True</code>.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
-    &#34;&#34;&#34;Uses NSLR-HMM to predict gaze and returns segments and predicted classes.&#34;&#34;&#34;
+    &#34;&#34;&#34;Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data. Must be 
+        represented in degree units.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data. Must be 
+        represented in degree units.
+    times : array of float
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording (in seconds).
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the `times` array). Default=False.
+    return_orig_output : bool
+        If True, additionally return NSLR-HMM&#39;s original segmentation 
+        object as output. Default=False.
+    **nslr_kwargs
+        Any additional keyword argument will be passed to 
+        nslr_hmm.classify_gaze().
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    segment_dict : dict
+        A dictionary containing the original output from NSLR-HMM: 
+        &#34;sample_class&#34;, &#34;segmentation&#34; and &#34;seg_class&#34;. Only returned if 
+        `return_orig_output = True`.  
+    
+    &#34;&#34;&#34;
     
     # extract gaze and time array
     gaze_array = np.vstack([x, y]).T
@@ -177,18 +326,107 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
 </details>
 </dd>
 <dt id="cateye.cateye.classify_remodnav"><code class="name flex">
-<span>def <span class="ident">classify_remodnav</span></span>(<span>x, y, time, px2deg, return_discrete=False, return_orig_output=False, classifier_kwargs={}, preproc_kwargs={}, process_kwargs={}, simple_output=False)</span>
+<span>def <span class="ident">classify_remodnav</span></span>(<span>x, y, time, px2deg, return_discrete=False, return_orig_output=False, simple_output=False, classifier_kwargs={}, preproc_kwargs={}, process_kwargs={})</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Uses Remodnav to predict gaze and returns segments and predicted classes.</p></div>
+<div class="desc"><p>Uses Remodnav to predict gaze and returns segments and predicted classes.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the x-axis of your gaze data.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the y-axis of your gaze data.</dd>
+<dt><strong><code>times</code></strong> :&ensp;<code>float</code> or <code>array</code> of <code>float</code></dt>
+<dd>Either a 1D-array representing the sampling times of the gaze
+arrays or a float/int that represents the sampling rate.</dd>
+<dt><strong><code>px2deg</code></strong> :&ensp;<code>float</code></dt>
+<dd>The ratio between one pixel in the recording and one degree.
+If <code>x</code> and <code>y</code> are in degree units, px2deg = 1.</dd>
+<dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, returns the output in discrete format, if False, in
+continuous format (matching the <code>times</code> array). Default=False.</dd>
+<dt><strong><code>return_orig_output</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, additionally return REMoDNaV's original segmentation
+events as output. Default=False.</dd>
+<dt><strong><code>simple_output</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, return a simplified version of REMoDNaV's output,
+containing only the gaze categories: ["Fixation", "Saccade",
+"Smooth Pursuit", "PSO"]. Default=False.</dd>
+<dt><strong><code>classifier_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dict consisting of keys that can be fed as keyword arguments
+to remodnav.clf.EyegazeClassifier(). Default={}.</dd>
+<dt><strong><code>preproc_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dict consisting of keys that can be fed as keyword arguments
+to remodnav.clf.EyegazeClassifier().preproc(). Default={}.</dd>
+<dt><strong><code>process_kwargs</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dict consisting of keys that can be fed as keyword arguments
+to remodnav.clf(). Default={}.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>segments</code></strong> :&ensp;<code>array</code> of <code>(int, float)</code></dt>
+<dd>Either the event indices (continuous format) or the event
+times (discrete format), indicating the start of a new segment.</dd>
+<dt><strong><code>classes</code></strong> :&ensp;<code>array</code> of <code>str</code></dt>
+<dd>The predicted class corresponding to each element in <code>segments</code>.</dd>
+<dt><strong><code>events</code></strong> :&ensp;<code>array</code></dt>
+<dd>A record array containing the original output from REMoDNaV.
+Only returned if <code>return_orig_output = True</code>.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_output=False,
-                      classifier_kwargs={}, preproc_kwargs={}, process_kwargs={},
-                      simple_output=False):
-    &#34;&#34;&#34;Uses Remodnav to predict gaze and returns segments and predicted classes.&#34;&#34;&#34;
+                      simple_output=False, classifier_kwargs={}, preproc_kwargs={},
+                      process_kwargs={}):
+    &#34;&#34;&#34;Uses Remodnav to predict gaze and returns segments and predicted classes.
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    times : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    px2deg : float
+        The ratio between one pixel in the recording and one degree. 
+        If `x` and `y` are in degree units, px2deg = 1.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the `times` array). Default=False.
+    return_orig_output : bool
+        If True, additionally return REMoDNaV&#39;s original segmentation 
+        events as output. Default=False.
+    simple_output : bool
+        If True, return a simplified version of REMoDNaV&#39;s output, 
+        containing only the gaze categories: [&#34;Fixation&#34;, &#34;Saccade&#34;,
+        &#34;Smooth Pursuit&#34;, &#34;PSO&#34;]. Default=False.
+    classifier_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf.EyegazeClassifier(). Default={}.
+    preproc_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf.EyegazeClassifier().preproc(). Default={}.
+    process_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to remodnav.clf(). Default={}.
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    events : array
+        A record array containing the original output from REMoDNaV.
+        Only returned if `return_orig_output = True`.
+    
+    &#34;&#34;&#34;
+    
     
     times = np.array(time) if hasattr(time, &#39;__iter__&#39;) else np.arange(0, len(x), 1/time)
     if np.std(times[1:] - times[:-1]) &gt; 1e-5:
