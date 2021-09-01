@@ -71,12 +71,6 @@ CatEye's documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) a
 
 [Documentation](https://digyt.github.io/cateye/)
 
-And remember that in most Python interfaces, you can print the docstring of a function via e.g. calling
-```python
-import cateye
-cateye.discrete_to_continuous?
-```
-
 <!-- 
 Note for myself: build the documentation with:
 cd cateye_head_dir
