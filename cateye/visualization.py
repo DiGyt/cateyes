@@ -25,9 +25,55 @@ N_COLS = {'Fixation': 'blue',
 
 
 def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=True,
-                      show_legend=True, color_dict=None, ax=None):
+                      color_dict=None, show_legend=True, ax=None):
     """Plots a gaze time series colored by discrete segments and annotated with 
     discrete events.
+    
+    Parameters
+    ----------
+    gaze : array of float
+        A 1D-array representing one axis of the gaze data.
+    times : array of float
+        A 1D-array representing the sampling times of the gaze data. 
+    segments : tuple of (array, array) or None
+        Discrete segments as (segment_id, segment_value) as for 
+        example created by `continuous_to_discrete` or 
+        `classify_xy(return_discrete=true)`. The events defined in 
+        segments will be used to color the plot line according to the 
+        classes defined in segments. If None, segments will not be
+        specifically colored. Default=None.
+    events : tuple of (array, array) or None
+        Discrete events as (event_id, event_value) as for example 
+        created by `continuous_to_discrete` or 
+        `classify_xy(return_discrete=true)`. The events defined in 
+        events will be plotted as annotated vertical lines at the 
+        respective time points. If None, no events will be annotated.
+        Default=None.
+    show_event_text : bool
+        If True, plots events as vertical lines with text annotations 
+        taken from events[1]. If False, plots only the vertical lines.
+        Default=True.
+    color_dict : dict or None
+        A Dictionary mapping the set of keys in segments[1] to 
+        matplotlib colors. This mapping will decide which segment 
+        value will be plotted in which color. If None, a default 
+        dict will be used, linking the default classification keys 
+        (like "Fixation", "ISaccade", etc.) to CatEye standard colors. 
+        Use this parameter if you want to change the standard colors 
+        or if you want to color segments by keys which aren't listed 
+        in the default dict. Default=None.
+    show_legend : bool
+        If True, plot a legend explaining segments according to 
+        color_dict as well as events. Default=True.
+    ax : matplotlib.pyplot.axes or None
+        The matplotlib axis used to contain the plot. If None, a new
+        plot will be created. Default=None.
+        
+    Returns
+    -------
+    ax : matplotlib.pyplot.axes
+        The matplotlib plot.
+    
     """
     
     if ax == None:
@@ -76,11 +122,75 @@ def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=T
     return ax
 
 
-def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=True, show_arrows=True,
-                    show_dots=False, alpha_decay=0., color_dict=None, ax=None, plot_kwargs={},
-                    dot_kwargs={}, arrow_kwargs={}):
+def plot_trajectory(x, y, times, segments=None, color_dict=None, show_legend=True,
+                    show_clean=True, show_arrows=True, show_dots=False, alpha_decay=0.,
+                    ax=None, plot_kwargs={}, dot_kwargs={}, arrow_kwargs={}):
     """Plots a spatial gaze trajectory colored by discrete segments, e.g. according to
-    gaze classification."""
+    gaze classification.
+        
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of the gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of the gaze data.
+    times : array of float
+        A 1D-array representing the sampling times of the gaze data. 
+    segments : tuple of (array, array) or None
+        Discrete segments as (segment_id, segment_value) as for 
+        example created by `continuous_to_discrete` or 
+        `classify_xy(return_discrete=true)`. The events defined in 
+        segments will be used to color the plot line according to the 
+        classes defined in segments. If None, segments will not be
+        specifically colored. Default=None.
+    color_dict : dict or None
+        A Dictionary mapping the set of keys in segments[1] to 
+        matplotlib colors. This mapping will decide which segment 
+        value will be plotted in which color. If None, a default 
+        dict will be used, linking the default classification keys 
+        (like "Fixation", "ISaccade", etc.) to CatEye standard colors. 
+        Use this parameter if you want to change the standard colors 
+        or if you want to color segments by keys which aren't listed 
+        in the default dict. Default=None.
+    show_legend : bool
+        If True, plot a legend explaining segments according to 
+        color_dict as well as events. Default=True.
+    show_clean : bool
+        If True, simplify the gaze plot by reducing Fixation and 
+        Saccade segments as straight lines instead of the original 
+        sample course. Default=True.
+    show_arrows : bool
+        If True, plot Saccades as arrows indicating the Saccade 
+        direction instead of lines/the original sample course.
+        If True, show_clean must also be True. Default=True.
+    show_dots : bool
+        If True, Indicate the start of each new segment with a 
+        plotted dot, colored in the segment color. Default=False.
+    alpha_decay : float
+        With this parameter, the alpha level of each segment can 
+        be decayed such that newer segments are more visible and 
+        older segments are less visible. Starting with the latest
+        segment, each earler segment's alpha level will be decayed
+        by alpha_decay. Default=0.
+    ax : matplotlib.pyplot.axes or None
+        The matplotlib axis used to contain the plot. If None, a new
+        plot will be created. Default=None.
+    plot_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to plt.plot() when plotting the gaze course. Can be used to 
+        embellish the plot. Default={}.
+    dot_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to plt.plot() when plotting the segment dots. Default={}.
+    arrow_kwargs : dict
+        A dict consisting of keys that can be fed as keyword arguments 
+        to plt.arrow() when plotting the Saccade arrows. Default={}.
+        
+    Returns
+    -------
+    ax : matplotlib.pyplot.axes
+        The matplotlib plot.
+        """
     
     if show_arrows == True and show_clean == False:
         raise ValueError("If show_arrows = True, then show_clean must be True.")
@@ -140,7 +250,9 @@ def plot_trajectory(x, y, times, segments=None, show_legend=True, show_clean=Tru
 
 def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, trial_info=None,
                            title=None, stimulus=None, figsize=None, blinks=None):
-    """Plots a segmentation from nslr predictions."""
+    """Plots a segmentation using NSLR's original segmentation (including smoothing). Not
+    intended for general use.
+    """
     VAR_NAMES = ["Theta", "Phi"]
     
     f, axes = plt.subplots(2, 1, sharex=True, figsize=figsize)
@@ -168,15 +280,7 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
         for i, seg in enumerate(segmentation.segments):
             cls = seg_class[i]
             if (seg.t[0] > time_array[0]) and (seg.t[1] < time_array[-1]): 
-                if not isinstance(blinks, type(None)):
-                    time_window = np.logical_and(time_array > seg.t[0], time_array < seg.t[1])
-                    blink = np.mean(blinks[time_window])
-                    if blink > 0.2:
-                        ax.plot(seg.t, np.array(seg.x)[:, idx], color="grey")
-                    else:
-                        ax.plot(seg.t, np.array(seg.x)[:, idx], color=COLORS[cls])
-                else:
-                    ax.plot(seg.t, np.array(seg.x)[:, idx], color=COLORS[cls])
+                ax.plot(seg.t, np.array(seg.x)[:, idx], color=COLORS[cls])
 
     if trial_info != None and len(trial_info) > 0:
         y_pos = - y_lims[1] * 0.95  # min([i[0] for i in gaze_array])
@@ -195,9 +299,6 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
     leg_indicators = ["Orig. Samples", "Fixation", "Saccade", "Smooth Pursuit", "PSO"]
     plt.legend(leg_artists, leg_indicators, loc="lower right", title="Gaze Classification")
     
-    if not isinstance(blinks, type(None)):
-        leg_artists = leg_artists + [plt.Line2D((0,1),(0,0), color="grey")]
-        leg_indicators = leg_indicators + ["Blink/Noise"]
         
     if not isinstance(stimulus, type(None)):
         leg_artists = leg_artists + [plt.Line2D((0,1),(0,0),  linestyle='--', color="lightblue")]
