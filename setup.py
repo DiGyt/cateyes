@@ -7,12 +7,12 @@ def read(fname):
 
 setup(
     name = "cateye",
-    version = "0.0.2",
+    version = "0.0.3",
 
     author = "Dirk Gütlin",
     author_email = "dirk.guetlin@gmail.com",
     description = ("Uniform Categorization of Eyetracking in Python."),
-    license = "BSD",
+    license = "BSD-3",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/CatEye",
     packages=['cateye'],
