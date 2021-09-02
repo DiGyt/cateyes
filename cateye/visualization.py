@@ -122,7 +122,7 @@ def plot_segmentation(gaze, times, segments=None, events=None, show_event_text=T
         
         
     if show_legend:
-        ax.legend(leg_artists, leg_indicators, loc="lower right", title="Gaze Classification")
+        ax.legend(leg_artists, leg_indicators, loc="lower right")
                 
     return ax
 
@@ -248,7 +248,7 @@ def plot_trajectory(x, y, times, segments=None, color_dict=None, show_legend=Tru
     leg_indicators = list(color_dict.keys())
           
     if show_legend:
-        ax.legend(leg_artists, leg_indicators, title="Gaze Classification")
+        ax.legend(leg_artists, leg_indicators)
                 
     return ax
 
