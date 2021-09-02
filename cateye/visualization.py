@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+#
+# License: BSD-3-Clause
+
 """
 cateye.visualization implements functions to plot and visualize classified 
 Eyetracking data.

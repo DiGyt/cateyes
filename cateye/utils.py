@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+#
+# License: BSD-3-Clause
+
 """
 cateye.utils provides utility functions to convert and handle data.
 """

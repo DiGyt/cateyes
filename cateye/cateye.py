@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+#
+# License: BSD-3-Clause
+
 """
 In cateye.cateye you can find all available classification 
 algorithms.
