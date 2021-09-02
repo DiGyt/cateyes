@@ -26,6 +26,7 @@ setup(
     install_requires=[
         "numpy>=1.14",
         "scipy",
+        "matplotlib",
         "remodnav",
         "nslr @ git+https://github.com/pupil-labs/nslr",
         "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
