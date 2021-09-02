@@ -13,8 +13,8 @@ the respective submodules.
 
 """
 
-from .cateye import (classify_nslr_hmm, classify_remodnav, 
-                     classify_dispersion, classify_velocity)
+from .classification import (classify_nslr_hmm, classify_remodnav, 
+                             classify_dispersion, classify_velocity)
 from .utils import (discrete_to_continuous, continuous_to_discrete,
                     sfreq_to_times, pixel_to_deg, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,
