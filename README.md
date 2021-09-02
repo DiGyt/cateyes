@@ -16,8 +16,8 @@ This repository was developed for Peter König's Neurobiopsychology Lab at the I
 Currently available gaze classification algorithms are:
 - [NSLR-HMM](https://github.com/pupil-labs/nslr-hmm): Pekkanen, J., & Lappi, O. (2017). A new and general approach to signal denoising and eye movement classification based on segmented linear regression. Scientific reports, 7(1), 1-13.
 - [REMoDNaV](https://github.com/psychoinformatics-de/remodnav): Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: Robust Eye Movement Detection for Natural Viewing. bioRxiv. DOI: 10.1101/619254
-- I-DT dispersion-based algorithm: Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations and saccades in eye-tracking protocols. In Proceedings of the 2000 symposium on Eye tracking research & applications (pp. 71-78).
-- I-VT velocity-based algorithm: Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations and saccades in eye-tracking protocols. In Proceedings of the 2000 symposium on Eye tracking research & applications (pp. 71-78).
+- [I-DT dispersion-based algorithm](https://dl.acm.org/doi/10.1145/355017.355028): Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations and saccades in eye-tracking protocols. In Proceedings of the 2000 symposium on Eye tracking research & applications.
+- [I-VT velocity-based algorithm](https://dl.acm.org/doi/10.1145/355017.355028): Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations and saccades in eye-tracking protocols. In Proceedings of the 2000 symposium on Eye tracking research & applications.
 
 Of course we will aim to include more gaze classification algorithms in the future. Suggestions and links to implementations are always welcome.
 
