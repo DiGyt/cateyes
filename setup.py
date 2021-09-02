@@ -24,7 +24,7 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        "numpy>=1.14",
+        "numpy",
         "scipy",
         "matplotlib",
         "remodnav",

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+# (c) Dirk Gütlin, 2021. <dirk.guetlin@gmail.com>
 #
 # License: BSD-3-Clause
 
@@ -104,9 +104,6 @@ def continuous_to_discrete(times, indices, values):
         corresponding to `discrete_times`. Is the same length as 
         `discrete_times`.
     """
-    
-    # sort indices by indices
-    indices, values = zip(*[i for i in sorted(zip(indices, values))])
     
     # fill the discrete lists with events
     discrete_times = []

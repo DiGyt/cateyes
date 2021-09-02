@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+# (c) Dirk Gütlin, 2021. <dirk.guetlin@gmail.com>
 #
 # License: BSD-3-Clause
 
@@ -13,7 +13,8 @@ the respective submodules.
 
 """
 
-from .cateye import classify_nslr_hmm, classify_remodnav
+from .cateye import (classify_nslr_hmm, classify_remodnav, 
+                     classify_dispersion, classify_velocity)
 from .utils import (discrete_to_continuous, continuous_to_discrete,
                     sfreq_to_times, pixel_to_deg, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,

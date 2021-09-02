@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Authors: Dirk Gütlin <dirk.guetlin@gmail.com>
+# (c) Dirk Gütlin, 2021. <dirk.guetlin@gmail.com>
 #
 # License: BSD-3-Clause
 
