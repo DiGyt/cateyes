@@ -30,7 +30,12 @@ the respective submodules.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
+<pre><code class="python"># -*- coding: utf-8 -*-
+# (c) Dirk Gütlin, 2021. &lt;dirk.guetlin@gmail.com&gt;
+#
+# License: BSD-3-Clause
+
+&#34;&#34;&#34;
 .. image:: ./../files/imgs/cateye_header.png
 
 Welcome to the CatEye documentation.
@@ -40,7 +45,8 @@ the respective submodules.
 
 &#34;&#34;&#34;
 
-from .cateye import classify_nslr_hmm, classify_remodnav
+from .classification import (classify_nslr_hmm, classify_remodnav, 
+                             classify_dispersion, classify_velocity)
 from .utils import (discrete_to_continuous, continuous_to_discrete,
                     sfreq_to_times, pixel_to_deg, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,
@@ -50,9 +56,9 @@ from .visualization import (plot_segmentation, plot_trajectory,
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="cateye.cateye" href="cateye.html">cateye.cateye</a></code></dt>
+<dt><code class="name"><a title="cateye.classification" href="classification.html">cateye.classification</a></code></dt>
 <dd>
-<div class="desc"><p>In cateye.cateye you can find all available classification
+<div class="desc"><p>In cateye.classification you can find all available classification
 algorithms.</p></div>
 </dd>
 <dt><code class="name"><a title="cateye.utils" href="utils.html">cateye.utils</a></code></dt>
@@ -81,7 +87,7 @@ Eyetracking data.</p></div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="cateye.cateye" href="cateye.html">cateye.cateye</a></code></li>
+<li><code><a title="cateye.classification" href="classification.html">cateye.classification</a></code></li>
 <li><code><a title="cateye.utils" href="utils.html">cateye.utils</a></code></li>
 <li><code><a title="cateye.visualization" href="visualization.html">cateye.visualization</a></code></li>
 </ul>

@@ -27,7 +27,12 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
+<pre><code class="python"># -*- coding: utf-8 -*-
+# (c) Dirk Gütlin, 2021. &lt;dirk.guetlin@gmail.com&gt;
+#
+# License: BSD-3-Clause
+
+&#34;&#34;&#34;
 cateye.utils provides utility functions to convert and handle data.
 &#34;&#34;&#34;
 
@@ -128,9 +133,6 @@ def continuous_to_discrete(times, indices, values):
         corresponding to `discrete_times`. Is the same length as 
         `discrete_times`.
     &#34;&#34;&#34;
-    
-    # sort indices by indices
-    indices, values = zip(*[i for i in sorted(zip(indices, values))])
     
     # fill the discrete lists with events
     discrete_times = []
@@ -289,9 +291,6 @@ corresponding to <code>discrete_times</code>. Is the same length as
         corresponding to `discrete_times`. Is the same length as 
         `discrete_times`.
     &#34;&#34;&#34;
-    
-    # sort indices by indices
-    indices, values = zip(*[i for i in sorted(zip(indices, values))])
     
     # fill the discrete lists with events
     discrete_times = []
