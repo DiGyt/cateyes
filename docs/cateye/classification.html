@@ -321,8 +321,8 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
         Either a 1D-array representing the sampling times of the gaze 
         arrays or a float/int that represents the sampling rate.
     threshold : float
-        The maximally allowed dispersion (distance of x/y min and max 
-        values) within `window_len` in order to be counted as a 
+        The maximally allowed dispersion (difference of x/y min and 
+        max values) within `window_len` in order to be counted as a 
         Fixation. Value depends on the unit of your gaze data.
     window_len : float
         The window length in seconds within which the dispersion is 
@@ -437,8 +437,8 @@ and saccades in eye-tracking protocols. In Proceedings of the
 <dd>Either a 1D-array representing the sampling times of the gaze
 arrays or a float/int that represents the sampling rate.</dd>
 <dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
-<dd>The maximally allowed dispersion (distance of x/y min and max
-values) within <code>window_len</code> in order to be counted as a
+<dd>The maximally allowed dispersion (difference of x/y min and
+max values) within <code>window_len</code> in order to be counted as a
 Fixation. Value depends on the unit of your gaze data.</dd>
 <dt><strong><code>window_len</code></strong> :&ensp;<code>float</code></dt>
 <dd>The window length in seconds within which the dispersion is
@@ -478,8 +478,8 @@ times (discrete format), indicating the start of a new segment.</dd>
         Either a 1D-array representing the sampling times of the gaze 
         arrays or a float/int that represents the sampling rate.
     threshold : float
-        The maximally allowed dispersion (distance of x/y min and max 
-        values) within `window_len` in order to be counted as a 
+        The maximally allowed dispersion (difference of x/y min and 
+        max values) within `window_len` in order to be counted as a 
         Fixation. Value depends on the unit of your gaze data.
     window_len : float
         The window length in seconds within which the dispersion is 
