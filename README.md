@@ -1,7 +1,7 @@
 <img src="/docs/files/imgs/cateye_header.png" alt="CatEye logo" height="100"/>
 
 ___
-### Categorization for Eyetracking in Python
+### Categorization for Eye Tracking in Python
 
 - [Introduction](#introduction)
 - [Installation](#installation)
@@ -11,7 +11,7 @@ ___
 
 ## Introduction
 
-This repository was developed for Peter König's Neurobiopsychology Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a unified, simplistic, and elegant way of handling Eyetracking data.
+This repository was developed for Peter König's Neurobiopsychology Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a unified, simplistic, and elegant way of handling eye tracking data.
 
 Currently available gaze classification algorithms are:
 - [NSLR-HMM](https://github.com/pupil-labs/nslr-hmm): Pekkanen, J., & Lappi, O. (2017). A new and general approach to signal denoising and eye movement classification based on segmented linear regression. Scientific reports, 7(1), 1-13.
