@@ -377,3 +377,94 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
     if return_discrete:
         segments, classes = continuous_to_discrete(times, segments, classes)
     return segments, classes
+
+
+def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
+    """"Robust Saccade threshold estimation using median absolute deviation.
+    
+    Can be used to estimate a robust velocity threshold to use as threshold
+    parameter in the `classify_velocity` algorithm.
+    
+    For reference, see the paper:
+    Voloh, B., Watson, M. R., König, S., & Womelsdorf, T. (2019). MAD 
+    saccade: statistically robust saccade threshold estimation via the 
+    median absolute deviation. Journal of Eye Movement Research, 12(8).
+    
+    Original implemented by Ashima Keshava here:
+    https://gist.github.com/ashimakeshava/ecec1dffd63e49149619d3a8f2c0031f
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    time : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    th_0 : float
+        The initial threshold used at start. Threshold can be interpreted 
+        as `gaze_units/ms`, with `gaze_units` being the spatial unit of 
+        your eyetracking data (e.g. pixels, cm, degrees). Defaults to 200.
+    return_past_thresholds : bool
+        Whether to additionally return a list of all thresholds used 
+        during iteration. Defaults do False.
+        
+    Returns
+    -------
+    threshold : float
+        The maximally allowed velocity after which a sample should be 
+        classified as "Saccade". Threshold can be interpreted as
+        `gaze_units/ms`, with `gaze_units` being the spatial unit of 
+        your eyetracking data (e.g. pixels, cm, degrees).
+    past_thresholds : list of float
+        A list of all thresholds used during iteration. Only returned
+        if `return_past_thresholds` is True.
+        
+    Example
+    --------
+    >>> threshold = mad_velocity_thresh(x, y, time)
+    >>> segments, classes = classify_velocity(x, y, time, threshold)
+    """
+    # process time argument and calculate sample threshold
+    if hasattr(time, '__iter__'):
+        times = np.array(time)
+        if np.std(times[1:] - times[:-1]) > 1e-5:
+            warnings.warn(WARN_SFREQ)
+        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
+    else:
+        times = np.arange(0, len(x), 1 / time)
+        sfreq = time
+    
+    # calculate movement velocities
+    gaze = np.stack([x, y])
+    vels = np.linalg.norm(gaze[:, 1:] - gaze[:, :-1], axis=0)
+    vels = np.concatenate([[0.], vels])
+    
+    # define saccade threshold by MAD
+    threshs = []
+    angular_vel = vels
+    while True:
+        threshs.append(th_0)
+        angular_vel = angular_vel[angular_vel < th_0]
+        median = np.median(angular_vel)
+        diff = (angular_vel - median) ** 2
+        diff = np.sqrt(diff)
+        med_abs_deviation = np.median(diff)
+        th_1 = median + 3 * 1.48 * med_abs_deviation
+        # print(th_0, th_1)
+        if (th_0 - th_1) > 1:
+            th_0 = th_1
+        else:
+            saccade_thresh = th_1
+            threshs.append(saccade_thresh)
+            break
+    
+    # revert units
+    saccade_thresh = saccade_thresh * 1000 / sfreq
+    threshs = [i * 1000 / sfreq for i in threshs]
+    
+    if return_past_threshs:
+        return saccade_thresh, threshs
+    else:
+        return saccade_thresh
