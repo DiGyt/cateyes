@@ -46,7 +46,8 @@ the respective submodules.
 &#34;&#34;&#34;
 
 from .classification import (classify_nslr_hmm, classify_remodnav, 
-                             classify_dispersion, classify_velocity)
+                             classify_dispersion, classify_velocity,
+                             mad_velocity_thresh)
 from .utils import (discrete_to_continuous, continuous_to_discrete,
                     sfreq_to_times, pixel_to_deg, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,
