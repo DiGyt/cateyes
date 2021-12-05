@@ -139,59 +139,110 @@ def sfreq_to_times(gaze_array, sfreq, start_time=0):
     return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time
 
 
-def pixel_to_deg(x, screen_size, screen_res, viewing_dist, return_factor=False):
-    """Converts pixels (or any other spatial gaze coordinates) to degrees.
+def coords_to_degree(x, viewing_dist, screen_max, screen_min=None):
+    """Converts gaze data expressed in any flat spatial coordinates 
+    (e.g. centimetres, inch, digital coordinate frames) to degrees.
+    Assumes that the default gaze location is at the center of the
+    screen.
     
     Parameters
     ----------
     x : array of float
         The gaze array to transform. Can be either a 1D or 2D array.
         If a 2-D array, the first dimension must correspond to the gaze 
-        orientation (e.g. x, y).
-    screen_size : float, tuple/list of float
-        The screen size measured in the same unit as `screen_res`. 
-        If x is a 2D array, `screen_size` must be an iterable of the
-        same length as x.
-    screen_res : float, tuple/list of float
-        The screen resolution measured in the same unit as `screen_size`. 
-        If x is a 2D array, `screen_res` must be an iterable of the
-        same length as x.
+        dimensions (e.g. x, y) and the second to the time dimension.
     viewing_dist : float
         The distance between the eye and the screen, measured in the 
-        same unit as `screen_size`.
-    return_factor : bool
-        If True, return the conversion factors additionally to the 
-        converted gaze data. Default = False.
+        same unit as `screen_max` and `screen_min`.
+    screen_max : float, tuple/list of float
+        The maximum screen coordinates measured in the same unit as 
+        `viewing_dist` and `screen_min`. If `x` is a 2D array, `
+        screen_max` must be an iterable of the same length as `x`. 
+    screen_min : float, tuple/list of float
+        The minimum screen coordinates measured in the same unit as 
+        `viewing_dist` and `screen_min`. If `x` is a 2D array, `
+        screen_min` must be an iterable of the same length as `x`. 
         
     Returns
     -------
     x_converted : array of float
         The gaze array converted to degrees.
-    factor : array of float
-        The conversion factor(s) used to convert x (with 
-        `x_converted  = x * factor`). Only returned if 
-        `return_factor=True`.
-        """
-    msg = "If x has more than 1 dimension, screen_size/screen_res " \
-    "must be iterable objects with the same length as x."
+    """
+    # set default for screen min
     x = np.array(x)
-    lengthy = all([hasattr(screen_size, '__len__'),
-                   hasattr(screen_res, '__len__')])
+    if screen_min == None:
+        screen_min = np.zeros_like(screen_max)
+        
+    # check arguments shapes
+    msg_1 = "If x has more than 1 dimension, screen parameters" \
+    " must be iterable objects with the same length as x."
+    msg_2 = "Multiple screen parameter dimensions " \
+    "were passed for only one gaze series x."
+    lengthy = all([hasattr(screen_max, '__len__'),
+                   hasattr(screen_min, '__len__')])
     if x.ndim > 1:
-        if lengthy:
-            if not (len(x) == len(screen_size) == len(screen_res)):
-                raise ValueError(msg)
+        if not lengthy:
+            raise ValueError(msg_1)
         else:
-            raise ValueError(msg)
+            if not (len(x) == len(screen_max) == len(screen_min)):
+                raise ValueError(msg_1) 
     else:
-        if lengthy and not (1 == len(screen_size) == len(screen_res)):
-            raise ValueError("Multiple screen_size or screen_res " \
-                            "were passed for only one gaze series x.")
+        if lengthy and not (1 == len(screen_max) == len(screen_min)):
+            raise ValueError(msg_2)
+    
+    # convert the x array to degree using the arctan
+    coord_range = np.array(screen_max) - np.array(screen_min)
+    coord_range = coord_range.reshape(-1, 1)
+    x = x - coord_range / 2.  # 0 should be at the center
+    x = np.degrees(np.arctan2(x, viewing_dist))
+    return x
 
-    arctan = np.arctan2(np.array(screen_size) / 2., viewing_dist)
-    factor = np.degrees(arctan / (np.array(screen_res) / 2.))
-    factor = np.array([factor]).T
-    if return_factor:
-        return x * factor, factor
+
+def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
+    """Converts gaze data expressed as pixels to degrees. Assumes 
+    that the default gaze location is at the center of the screen.
+    
+    Parameters
+    ----------
+    x : array of float
+        The gaze array to transform. Can be either a 1D or 2D array.
+        If a 2-D array, the first dimension must correspond to the gaze 
+        dimensions (e.g. x, y) and the second to the time dimension.
+    viewing_dist : float
+        The distance between the eye and the screen, measured in the 
+        same unit as `screen_size`.
+    screen_size : float, tuple/list of float
+        The screen size measured in the same unit as `screen_res`. 
+        If `x` is a 2D array, `screen_size` must be an iterable of the
+        same length as `x`.
+    screen_res : float, tuple/list of float
+        The screen resolution measured in the same unit as `screen_size`. 
+        If `x` is a 2D array, `screen_res` must be an iterable of the
+        same length as `x`.
+        
+    Returns
+    -------
+    x_converted : array of float
+        The gaze array converted to degrees.
+    """
+    # check arguments shapes
+    msg_1 = "If x has more than 1 dimension, screen_res" \
+    " must be an iterable object with the same length as x."
+    msg_2 = "Multiple screen_res dimensions " \
+    "were passed for only one gaze series x."
+    x = np.array(x)
+    lengthy = hasattr(screen_res, '__len__')
+    if x.ndim > 1:
+        if (not lengthy) or (lengthy and len(x) != len(screen_res)):
+            raise ValueError(msg_1)
     else:
-        return x * factor
+        if lengthy and len(screen_max) != 1:
+            raise ValueError(msg_2)
+
+    # convert from pixels to spatial unit
+    screen_size = np.array(screen_size).reshape(-1, 1)
+    screen_res = np.array(screen_res).reshape(-1, 1)
+    x = x / screen_res * screen_size
+    
+    # convert the spatial coordinates to degree
+    return coords_to_degree(x, viewing_dist, screen_size)

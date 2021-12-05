@@ -153,7 +153,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     For reference see:
     
     ---
-    Dar*, A. H., Wagner*, A. S., & Hanke, M. (2021). REMoDNaV: robust eye-movement 
+    Dar, A. H., Wagner, A. S., & Hanke, M. (2021). REMoDNaV: robust eye-movement 
     classification for dynamic stimulation. Behavior research methods, 53(1), 399-414.
     DOI: 10.3758/s13428-020-01428-x
     ---
