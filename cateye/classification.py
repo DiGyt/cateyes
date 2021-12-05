@@ -42,6 +42,7 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     """Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
     
     For reference see:
+    
     ---
     Pekkanen, J., & Lappi, O. (2017). A new and general approach to 
     signal denoising and eye movement classification based on segmented 
@@ -117,6 +118,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     """Uses REMoDNaV to predict gaze and returns segments and predicted classes.
     
     For reference see:
+    
     ---
     Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: 
     Robust Eye Movement Detection for Natural Viewing. bioRxiv. 
@@ -211,6 +213,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     to predict Saccades and returns segments and predicted classes.
     
     For reference see:
+    
     ---
     Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations 
     and saccades in eye-tracking protocols. In Proceedings of the 
@@ -283,6 +286,7 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
     to predict Fixations and returns segments and predicted classes.
     
     For reference see:
+    
     ---
     Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations 
     and saccades in eye-tracking protocols. In Proceedings of the 
@@ -394,11 +398,11 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
     Can be used to estimate a robust velocity threshold to use as threshold
     parameter in the `classify_velocity` algorithm.
     
-    Implementation taken from [this gist]
-    (https://gist.github.com/ashimakeshava/ecec1dffd63e49149619d3a8f2c0031f) 
-    by Ashima Keshava.
+    Implementation taken from [this gist] by Ashima Keshava.
+    [this gist]: https://gist.github.com/ashimakeshava/ecec1dffd63e49149619d3a8f2c0031f
     
     For reference, see the paper:
+    
     ---
     Voloh, B., Watson, M. R., König, S., & Womelsdorf, T. (2019). MAD 
     saccade: statistically robust saccade threshold estimation via the 
