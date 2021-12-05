@@ -26,11 +26,11 @@ CLASSES = {nslr_hmm.FIXATION: 'Fixation',
            None:"None",}
 
 REMODNAV_CLASSES = {"FIXA":"Fixation", "SACC":"Saccade",
-                    "ISAC":"ISaccade", "PURS":"Smooth Pursuit",
+                    "ISAC":"Saccade (ISI)", "PURS":"Smooth Pursuit",
                     "HPSO":"High-Velocity PSO" ,
                     "LPSO":"Low-Velocity PSO",
-                    "IHPS":"High-Velocity PSO (NCB)",
-                    "ILPS":"Low-Velocity PSO (NCB)"}
+                    "IHPS":"High-Velocity PSO (ISI)",
+                    "ILPS":"Low-Velocity PSO (ISI)"}
 
 REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
                    "ISAC":"Saccade", "PURS":"Smooth Pursuit",
@@ -40,6 +40,18 @@ REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
     """Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
+    
+    NSLR-HMM takes eye tracking data (in degree units), segments them using 
+    Naive Segmented Linear Regression and then categorizes these segments based 
+    on a pretrained Hidden Markov Model.
+    
+    NSLR-HMM can separate between the following classes:
+    ```
+    Fixation, Saccade, Smooth Pursuit, PSO
+    ```
+    
+    For more information and documentation, see the [pupil-labs implementation].
+    [pupil-labs implementation]: https://github.com/pupil-labs/nslr-hmm
     
     For reference see:
     
@@ -117,12 +129,39 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
                       process_kwargs={}):
     """Uses REMoDNaV to predict gaze and returns segments and predicted classes.
     
+    REMoDNaV is a fixation-based algorithm which is derived from the Nyström & Holmqvist 
+    (2010) algorithm, but implements various extension. Its aimed to provide robust 
+    classification under different eye tracking settings.
+    
+    REMoDNaV can separate between the following classes:
+    ```
+    Fixation, Saccade, Saccade (intersaccadic interval), Smooth Pursuit,
+    High-Velocity PSO, High-Velocity PSO (intersaccadic interval),
+    Low-Velocity PSO, Low-Velocity PSO (intersaccadic interval)
+    ```
+    For information on the difference between normal (chunk boundary) intervals and 
+    intersaccadic intervals, please refer to the original paper.
+    
+    
+    If `simple_output=True`, REMoDNaV will separate between the following classes:
+    ```
+    Fixation, Saccade, Smooth Pursuit, PSO
+    ```
+    
+    For more information and documentation, see the [original implementation].
+    [original implementation]: https://github.com/psychoinformatics-de/remodnav
+    
+    
     For reference see:
     
     ---
-    Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: 
-    Robust Eye Movement Detection for Natural Viewing. bioRxiv. 
-    DOI: 10.1101/619254
+    Dar*, A. H., Wagner*, A. S., & Hanke, M. (2021). REMoDNaV: robust eye-movement 
+    classification for dynamic stimulation. Behavior research methods, 53(1), 399-414.
+    DOI: 10.3758/s13428-020-01428-x
+    ---
+    Nyström, M., & Holmqvist, K. (2010). An adaptive algorithm for fixation, saccade,
+    and glissade detection in eyetracking data. Behavior research methods, 
+    42(1), 188-204.
     ---
     
     Parameters
@@ -210,7 +249,16 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     
 def classify_velocity(x, y, time, threshold, return_discrete=False):
     """"Uses I-VT velocity algorithm from Salvucci & Goldberg (2000)
-    to predict Saccades and returns segments and predicted classes.
+    to predict Saccades.
+    
+    One of several algorithms proposed in Salvucci & Goldberg (2000),
+    the I-VT algorithm classifies samples as saccades if their rate of
+    change from a previous sample exceeds a certain threshold.
+    
+    I-VT can separate between the following classes:
+    ```
+    Fixation, Saccade
+    ```
     
     For reference see:
     
@@ -283,7 +331,15 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     
 def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False):
     """Uses I-DT dispersion algorithm from Salvucci & Goldberg (2000)
-    to predict Fixations and returns segments and predicted classes.
+    to predict Fixations and Saccades.
+    
+    The I-DT algorithm classifies fixations by checking if the dispersion of 
+    samples within a certain window does not surpass a predefined threshold.
+    
+    I-DT can separate between the following classes:
+    ```
+    Fixation, Saccade
+    ```
     
     For reference see:
     
