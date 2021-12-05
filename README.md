@@ -76,6 +76,5 @@ CatEye's documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) a
 <!-- 
 Note for myself: build the documentation with:
 cd cateye_head_dir
-pdoc --html --output-dir docs cateye --force
-pdoc --html --output-dir docs cateye -f -c sort_identifiers=False
+pdoc3 --html --output-dir docs cateye -f -c sort_identifiers=False
 -->
