@@ -42,9 +42,12 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     """Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
     
     For reference see:
+    ---
     Pekkanen, J., & Lappi, O. (2017). A new and general approach to 
     signal denoising and eye movement classification based on segmented 
     linear regression. Scientific reports, 7(1), 1-13.
+    ---
+    
     
     Parameters
     ----------
@@ -114,9 +117,11 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     """Uses REMoDNaV to predict gaze and returns segments and predicted classes.
     
     For reference see:
+    ---
     Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: 
     Robust Eye Movement Detection for Natural Viewing. bioRxiv. 
     DOI: 10.1101/619254
+    ---
     
     Parameters
     ----------
@@ -206,9 +211,11 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     to predict Saccades and returns segments and predicted classes.
     
     For reference see:
+    ---
     Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations 
     and saccades in eye-tracking protocols. In Proceedings of the 
     2000 symposium on Eye tracking research & applications (pp. 71-78).
+    ---
     
     Parameters
     ----------
@@ -276,9 +283,11 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
     to predict Fixations and returns segments and predicted classes.
     
     For reference see:
+    ---
     Salvucci, D. D., & Goldberg, J. H. (2000). Identifying fixations 
     and saccades in eye-tracking protocols. In Proceedings of the 
     2000 symposium on Eye tracking research & applications (pp. 71-78).
+    ---
     
     Parameters
     ----------
@@ -385,13 +394,16 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
     Can be used to estimate a robust velocity threshold to use as threshold
     parameter in the `classify_velocity` algorithm.
     
+    Implementation taken from [this gist]
+    (https://gist.github.com/ashimakeshava/ecec1dffd63e49149619d3a8f2c0031f) 
+    by Ashima Keshava.
+    
     For reference, see the paper:
+    ---
     Voloh, B., Watson, M. R., König, S., & Womelsdorf, T. (2019). MAD 
     saccade: statistically robust saccade threshold estimation via the 
     median absolute deviation. Journal of Eye Movement Research, 12(8).
-    
-    Original implemented by Ashima Keshava here:
-    https://gist.github.com/ashimakeshava/ecec1dffd63e49149619d3a8f2c0031f
+    ---
     
     Parameters
     ----------
