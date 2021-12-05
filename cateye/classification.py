@@ -39,13 +39,12 @@ REMODNAV_SIMPLE = {"FIXA":"Fixation", "SACC":"Saccade",
     
     
 def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs):
-    """Uses NSLR-HMM to predict gaze and returns segments and predicted classes.
+    """Robust gaze classification using NSLR-HMM by Pekannen & Lappi (2017).
     
     NSLR-HMM takes eye tracking data (in degree units), segments them using 
     Naive Segmented Linear Regression and then categorizes these segments based 
-    on a pretrained Hidden Markov Model.
-    
-    NSLR-HMM can separate between the following classes:
+    on a pretrained Hidden Markov Model. NSLR-HMM can separate between the 
+    following classes:
     ```
     Fixation, Saccade, Smooth Pursuit, PSO
     ```
@@ -127,13 +126,12 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
 def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_output=False,
                       simple_output=False, classifier_kwargs={}, preproc_kwargs={},
                       process_kwargs={}):
-    """Uses REMoDNaV to predict gaze and returns segments and predicted classes.
+    """REMoDNaV robust eye movement prediction by Dar, Wagner, & Hanke (2021).
     
     REMoDNaV is a fixation-based algorithm which is derived from the Nyström & Holmqvist 
-    (2010) algorithm, but implements various extension. Its aimed to provide robust 
-    classification under different eye tracking settings.
-    
-    REMoDNaV can separate between the following classes:
+    (2010) algorithm, but adds various extension. Its aimed to provide robust 
+    classification under different eye tracking settings. REMoDNaV can separate between 
+    the following classes:
     ```
     Fixation, Saccade, Saccade (intersaccadic interval), Smooth Pursuit,
     High-Velocity PSO, High-Velocity PSO (intersaccadic interval),
@@ -248,14 +246,12 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
 
     
 def classify_velocity(x, y, time, threshold, return_discrete=False):
-    """"Uses I-VT velocity algorithm from Salvucci & Goldberg (2000)
-    to predict Saccades.
+    """I-VT velocity algorithm from Salvucci & Goldberg (2000).
     
     One of several algorithms proposed in Salvucci & Goldberg (2000),
     the I-VT algorithm classifies samples as saccades if their rate of
-    change from a previous sample exceeds a certain threshold.
-    
-    I-VT can separate between the following classes:
+    change from a previous sample exceeds a certain threshold. I-VT 
+    can separate between the following classes:
     ```
     Fixation, Saccade
     ```
@@ -330,12 +326,10 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     
     
 def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False):
-    """Uses I-DT dispersion algorithm from Salvucci & Goldberg (2000)
-    to predict Fixations and Saccades.
+    """I-DT dispersion algorithm from Salvucci & Goldberg (2000).
     
     The I-DT algorithm classifies fixations by checking if the dispersion of 
     samples within a certain window does not surpass a predefined threshold.
-    
     I-DT can separate between the following classes:
     ```
     Fixation, Saccade
@@ -449,7 +443,7 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
 
 
 def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
-    """"Robust Saccade threshold estimation using median absolute deviation.
+    """Robust Saccade threshold estimation using median absolute deviation.
     
     Can be used to estimate a robust velocity threshold to use as threshold
     parameter in the `classify_velocity` algorithm.
