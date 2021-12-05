@@ -284,6 +284,132 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="cateye.utils.sample_data_path"><code class="name flex">
+<span>def <span class="ident">sample_data_path</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>return the static path to a CatEye sample dataset.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The example file to load. Possible names are: 'example_data',
+'example_events' and 'test_data_full'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>data_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The absolute path leading to the respective .csv file on your
+machine.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_data_path(name):
+    &#34;&#34;&#34;return the static path to a CatEye sample dataset.
+    
+    Parameters
+    ----------
+    name : str
+        The example file to load. Possible names are: &#39;example_data&#39;,
+        &#39;example_events&#39; and &#39;test_data_full&#39;.
+   
+    Returns
+    -------
+    data_path : str
+        The absolute path leading to the respective .csv file on your 
+        machine.
+        &#34;&#34;&#34;
+    import os.path as op
+    data_dir = op.join(op.dirname(__file__), &#34;data&#34;)
+    data_path = op.join(data_dir, name + &#34;.csv&#34;)
+    return op.abspath(data_path)</code></pre>
+</details>
+</dd>
+<dt id="cateye.utils.discrete_to_continuous"><code class="name flex">
+<span>def <span class="ident">discrete_to_continuous</span></span>(<span>times, discrete_times, discrete_values)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Matches an array of discrete events to a continuous time series.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
+<dd>A 1D-array representing the sampling times of the continuous
+eyetracking recording.</dd>
+<dt><strong><code>discrete_times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
+<dd>A 1D-array representing discrete timepoints at which a specific
+event occurs. Is used to map <code>discrete_values</code> onto <code>times</code>.</dd>
+<dt><strong><code>discrete_values</code></strong> :&ensp;<code>array</code></dt>
+<dd>A 1D-array containing the event description or values
+corresponding to <code>discrete_times</code>. Must be the same length as
+<code>discrete_times</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>indices</code></strong> :&ensp;<code>array</code> of <code>int</code></dt>
+<dd>Array of length len(times) corresponding to the event index
+of the discrete events mapped onto the sampling times.</dd>
+<dt><strong><code>values</code></strong> :&ensp;<code>array</code></dt>
+<dd>Array of length len(times) corresponding to the event values
+or descriptions of the discrete events.</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; times = np.array([0., 0.1, 0.2])
+&gt;&gt;&gt; dis_times, dis_values = [0.1], [&quot;Saccade&quot;]
+&gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
+array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def discrete_to_continuous(times, discrete_times, discrete_values):
+    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.
+    
+    Parameters
+    ----------
+    times : array of (float, int)
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording.
+    discrete_times : array of (float, int)
+        A 1D-array representing discrete timepoints at which a specific
+        event occurs. Is used to map `discrete_values` onto `times`.
+    discrete_values : array
+        A 1D-array containing the event description or values 
+        corresponding to `discrete_times`. Must be the same length as 
+        `discrete_times`.
+        
+    Returns
+    -------
+    indices : array of int
+        Array of length len(times) corresponding to the event index 
+        of the discrete events mapped onto the sampling times.
+    values : array
+        Array of length len(times) corresponding to the event values
+        or descriptions of the discrete events.
+        
+    Example
+    --------
+    &gt;&gt;&gt; times = np.array([0., 0.1, 0.2])
+    &gt;&gt;&gt; dis_times, dis_values = [0.1], [&#34;Saccade&#34;]
+    &gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
+    array([0., 1., 1.]), array([None, &#39;Saccade&#39;, &#39;Saccade&#39;])
+    &#34;&#34;&#34;
+    
+    # sort the discrete events by time
+    time_val_sorted = sorted(zip(discrete_times, discrete_values))
+    
+    # fill the time series with indices and values
+    indices = np.zeros(len(times))
+    values = np.empty(len(times), dtype=object)
+    for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
+        selected = [times &gt;= dis_time]
+        indices[selected] = idx + 1
+        values[selected] = dis_val
+        
+    return indices, values</code></pre>
+</details>
+</dd>
 <dt id="cateye.utils.continuous_to_discrete"><code class="name flex">
 <span>def <span class="ident">continuous_to_discrete</span></span>(<span>times, indices, values)</span>
 </code></dt>
@@ -354,6 +480,51 @@ corresponding to <code>discrete_times</code>. Is the same length as
         cur_idx = idx
     
     return discrete_times, discrete_values</code></pre>
+</details>
+</dd>
+<dt id="cateye.utils.sfreq_to_times"><code class="name flex">
+<span>def <span class="ident">sfreq_to_times</span></span>(<span>gaze_array, sfreq, start_time=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a times array from the sampling frequency (in Hertz).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>gaze_array</code></strong> :&ensp;<code>array</code></dt>
+<dd>The gaze array (is required to infer the number of samples).</dd>
+<dt><strong><code>sfreq</code></strong> :&ensp;<code>float</code></dt>
+<dd>The sampling frequency in Hz.</dd>
+<dt><strong><code>start_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>The time (in seconds) at which the first sample will start.
+Default = 0.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the sampling times of the recording.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sfreq_to_times(gaze_array, sfreq, start_time=0):
+    &#34;&#34;&#34;Creates a times array from the sampling frequency (in Hertz).
+    
+    Parameters
+    ----------
+    gaze_array : array
+        The gaze array (is required to infer the number of samples).
+    sfreq : float
+        The sampling frequency in Hz.
+    start_time : float
+        The time (in seconds) at which the first sample will start.
+        Default = 0.
+   
+    Returns
+    -------
+    times : array of float
+        A 1D-array representing the sampling times of the recording.
+        &#34;&#34;&#34;
+    return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time</code></pre>
 </details>
 </dd>
 <dt id="cateye.utils.coords_to_degree"><code class="name flex">
@@ -448,90 +619,6 @@ same unit as <code>screen_max</code> and <code>screen_min</code>.</dd>
     return x</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.discrete_to_continuous"><code class="name flex">
-<span>def <span class="ident">discrete_to_continuous</span></span>(<span>times, discrete_times, discrete_values)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Matches an array of discrete events to a continuous time series.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
-<dd>A 1D-array representing the sampling times of the continuous
-eyetracking recording.</dd>
-<dt><strong><code>discrete_times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
-<dd>A 1D-array representing discrete timepoints at which a specific
-event occurs. Is used to map <code>discrete_values</code> onto <code>times</code>.</dd>
-<dt><strong><code>discrete_values</code></strong> :&ensp;<code>array</code></dt>
-<dd>A 1D-array containing the event description or values
-corresponding to <code>discrete_times</code>. Must be the same length as
-<code>discrete_times</code>.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>indices</code></strong> :&ensp;<code>array</code> of <code>int</code></dt>
-<dd>Array of length len(times) corresponding to the event index
-of the discrete events mapped onto the sampling times.</dd>
-<dt><strong><code>values</code></strong> :&ensp;<code>array</code></dt>
-<dd>Array of length len(times) corresponding to the event values
-or descriptions of the discrete events.</dd>
-</dl>
-<h2 id="example">Example</h2>
-<pre><code class="language-python-repl">&gt;&gt;&gt; times = np.array([0., 0.1, 0.2])
-&gt;&gt;&gt; dis_times, dis_values = [0.1], [&quot;Saccade&quot;]
-&gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
-array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
-</code></pre></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def discrete_to_continuous(times, discrete_times, discrete_values):
-    &#34;&#34;&#34;Matches an array of discrete events to a continuous time series.
-    
-    Parameters
-    ----------
-    times : array of (float, int)
-        A 1D-array representing the sampling times of the continuous 
-        eyetracking recording.
-    discrete_times : array of (float, int)
-        A 1D-array representing discrete timepoints at which a specific
-        event occurs. Is used to map `discrete_values` onto `times`.
-    discrete_values : array
-        A 1D-array containing the event description or values 
-        corresponding to `discrete_times`. Must be the same length as 
-        `discrete_times`.
-        
-    Returns
-    -------
-    indices : array of int
-        Array of length len(times) corresponding to the event index 
-        of the discrete events mapped onto the sampling times.
-    values : array
-        Array of length len(times) corresponding to the event values
-        or descriptions of the discrete events.
-        
-    Example
-    --------
-    &gt;&gt;&gt; times = np.array([0., 0.1, 0.2])
-    &gt;&gt;&gt; dis_times, dis_values = [0.1], [&#34;Saccade&#34;]
-    &gt;&gt;&gt; discrete_to_continuous(times, dis_times, dis_values)
-    array([0., 1., 1.]), array([None, &#39;Saccade&#39;, &#39;Saccade&#39;])
-    &#34;&#34;&#34;
-    
-    # sort the discrete events by time
-    time_val_sorted = sorted(zip(discrete_times, discrete_values))
-    
-    # fill the time series with indices and values
-    indices = np.zeros(len(times))
-    values = np.empty(len(times), dtype=object)
-    for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
-        selected = [times &gt;= dis_time]
-        indices[selected] = idx + 1
-        values[selected] = dis_val
-        
-    return indices, values</code></pre>
-</details>
-</dd>
 <dt id="cateye.utils.pixel_to_degree"><code class="name flex">
 <span>def <span class="ident">pixel_to_degree</span></span>(<span>x, viewing_dist, screen_size, screen_res)</span>
 </code></dt>
@@ -615,93 +702,6 @@ same length as <code>x</code>.</dd>
     return coords_to_degree(x, viewing_dist, screen_size)</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.sample_data_path"><code class="name flex">
-<span>def <span class="ident">sample_data_path</span></span>(<span>name)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>return the static path to a CatEye sample dataset.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
-<dd>The example file to load. Possible names are: 'example_data',
-'example_events' and 'test_data_full'.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>data_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>The absolute path leading to the respective .csv file on your
-machine.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def sample_data_path(name):
-    &#34;&#34;&#34;return the static path to a CatEye sample dataset.
-    
-    Parameters
-    ----------
-    name : str
-        The example file to load. Possible names are: &#39;example_data&#39;,
-        &#39;example_events&#39; and &#39;test_data_full&#39;.
-   
-    Returns
-    -------
-    data_path : str
-        The absolute path leading to the respective .csv file on your 
-        machine.
-        &#34;&#34;&#34;
-    import os.path as op
-    data_dir = op.join(op.dirname(__file__), &#34;data&#34;)
-    data_path = op.join(data_dir, name + &#34;.csv&#34;)
-    return op.abspath(data_path)</code></pre>
-</details>
-</dd>
-<dt id="cateye.utils.sfreq_to_times"><code class="name flex">
-<span>def <span class="ident">sfreq_to_times</span></span>(<span>gaze_array, sfreq, start_time=0)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Creates a times array from the sampling frequency (in Hertz).</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>gaze_array</code></strong> :&ensp;<code>array</code></dt>
-<dd>The gaze array (is required to infer the number of samples).</dd>
-<dt><strong><code>sfreq</code></strong> :&ensp;<code>float</code></dt>
-<dd>The sampling frequency in Hz.</dd>
-<dt><strong><code>start_time</code></strong> :&ensp;<code>float</code></dt>
-<dd>The time (in seconds) at which the first sample will start.
-Default = 0.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
-<dd>A 1D-array representing the sampling times of the recording.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def sfreq_to_times(gaze_array, sfreq, start_time=0):
-    &#34;&#34;&#34;Creates a times array from the sampling frequency (in Hertz).
-    
-    Parameters
-    ----------
-    gaze_array : array
-        The gaze array (is required to infer the number of samples).
-    sfreq : float
-        The sampling frequency in Hz.
-    start_time : float
-        The time (in seconds) at which the first sample will start.
-        Default = 0.
-   
-    Returns
-    -------
-    times : array of float
-        A 1D-array representing the sampling times of the recording.
-        &#34;&#34;&#34;
-    return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time</code></pre>
-</details>
-</dd>
 </dl>
 </section>
 <section>
@@ -720,12 +720,12 @@ Default = 0.</dd>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="cateye.utils.continuous_to_discrete" href="#cateye.utils.continuous_to_discrete">continuous_to_discrete</a></code></li>
-<li><code><a title="cateye.utils.coords_to_degree" href="#cateye.utils.coords_to_degree">coords_to_degree</a></code></li>
-<li><code><a title="cateye.utils.discrete_to_continuous" href="#cateye.utils.discrete_to_continuous">discrete_to_continuous</a></code></li>
-<li><code><a title="cateye.utils.pixel_to_degree" href="#cateye.utils.pixel_to_degree">pixel_to_degree</a></code></li>
 <li><code><a title="cateye.utils.sample_data_path" href="#cateye.utils.sample_data_path">sample_data_path</a></code></li>
+<li><code><a title="cateye.utils.discrete_to_continuous" href="#cateye.utils.discrete_to_continuous">discrete_to_continuous</a></code></li>
+<li><code><a title="cateye.utils.continuous_to_discrete" href="#cateye.utils.continuous_to_discrete">continuous_to_discrete</a></code></li>
 <li><code><a title="cateye.utils.sfreq_to_times" href="#cateye.utils.sfreq_to_times">sfreq_to_times</a></code></li>
+<li><code><a title="cateye.utils.coords_to_degree" href="#cateye.utils.coords_to_degree">coords_to_degree</a></code></li>
+<li><code><a title="cateye.utils.pixel_to_degree" href="#cateye.utils.pixel_to_degree">pixel_to_degree</a></code></li>
 </ul>
 </li>
 </ul>

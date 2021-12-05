@@ -351,76 +351,6 @@ def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, tria
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="cateye.visualization.plot_nslr_segmentation"><code class="name flex">
-<span>def <span class="ident">plot_nslr_segmentation</span></span>(<span>time_array, gaze_array, segmentation, seg_class, trial_info=None, title=None, stimulus=None, figsize=None, blinks=None)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Plots a segmentation using NSLR's original segmentation (including smoothing). Not
-intended for general use.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, trial_info=None,
-                           title=None, stimulus=None, figsize=None, blinks=None):
-    &#34;&#34;&#34;Plots a segmentation using NSLR&#39;s original segmentation (including smoothing). Not
-    intended for general use.
-    &#34;&#34;&#34;
-    VAR_NAMES = [&#34;Theta&#34;, &#34;Phi&#34;]
-    
-    f, axes = plt.subplots(2, 1, sharex=True, figsize=figsize)
-    f.subplots_adjust(hspace=0)
-    f.suptitle(title)  # , fontsize=16)
-
-    # the limits are defined as 2 std devs from mean
-    y_lims = np.array(gaze_array).std(axis=0) * 2
-
-    for idx, ax in enumerate(axes):
-
-        # construct a plotting frame
-        ax.set_ylabel(VAR_NAMES[idx] + &#34;: Rot. in degrees&#34;)
-        ax.set_ylim([-y_lims[idx], y_lims[idx]])
-        ax.axhline(y=0, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
-        ax.axhline(y=-20, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
-        ax.axhline(y=20, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
-
-
-        ax.plot(time_array, gaze_array[:,idx], &#39;.&#39;)
-        if not isinstance(stimulus, type(None)):
-            st_id = [&#34;X_Position&#34;, &#34;Y_Position&#34;]
-            ax.plot(stimulus[&#34;Timestamp&#34;].to_numpy(), stimulus[st_id[idx]].to_numpy(), &#34;--&#34;, color=&#34;lightblue&#34;)
-
-        for i, seg in enumerate(segmentation.segments):
-            cls = seg_class[i]
-            if (seg.t[0] &gt; time_array[0]) and (seg.t[1] &lt; time_array[-1]): 
-                ax.plot(seg.t, np.array(seg.x)[:, idx], color=COLORS[cls])
-
-    if trial_info != None and len(trial_info) &gt; 0:
-        y_pos = - y_lims[1] * 0.95  # min([i[0] for i in gaze_array])
-        x_pos = (time_array[-1] - time_array[1]) / 150
-
-        for key in trial_info:
-            axes[0].axvline(x=float(key), linestyle=&#34;--&#34;)
-            axes[1].axvline(x=float(key), linestyle=&#34;--&#34;)
-            axes[1].text(float(key) + x_pos, y_pos,
-                         &#34;Event: {}&#34;.format(trial_info[key]), rotation=90,
-                         verticalalignment=&#39;bottom&#39;, color=&#39;#1f77b4&#39;)  #, weight=&#34;bold&#34;)
-
-    
-    leg_artists = [plt.Line2D((0,1),(0,0), marker=&#39;.&#39;, linestyle=&#39;&#39;)] + \
-                  [plt.Line2D((0,1),(0,0), color=color) for color in COLORS.values()]
-    leg_indicators = [&#34;Orig. Samples&#34;, &#34;Fixation&#34;, &#34;Saccade&#34;, &#34;Smooth Pursuit&#34;, &#34;PSO&#34;]
-    plt.legend(leg_artists, leg_indicators, loc=&#34;lower right&#34;, title=&#34;Gaze Classification&#34;)
-    
-        
-    if not isinstance(stimulus, type(None)):
-        leg_artists = leg_artists + [plt.Line2D((0,1),(0,0),  linestyle=&#39;--&#39;, color=&#34;lightblue&#34;)]
-        leg_indicators = leg_indicators + [&#34;Stimulus data&#34;]
-        
-    plt.legend(leg_artists, leg_indicators, loc=&#34;lower right&#34;, title=&#34;Gaze Classification&#34;)
-    plt.xlabel(&#34;Time in seconds&#34;)</code></pre>
-</details>
-</dd>
 <dt id="cateye.visualization.plot_segmentation"><code class="name flex">
 <span>def <span class="ident">plot_segmentation</span></span>(<span>gaze, times, segments=None, events=None, show_event_text=True, color_dict=None, show_legend=True, ax=None)</span>
 </code></dt>
@@ -773,6 +703,76 @@ to plt.arrow() when plotting the Saccade arrows. Default={}.</dd>
     return ax</code></pre>
 </details>
 </dd>
+<dt id="cateye.visualization.plot_nslr_segmentation"><code class="name flex">
+<span>def <span class="ident">plot_nslr_segmentation</span></span>(<span>time_array, gaze_array, segmentation, seg_class, trial_info=None, title=None, stimulus=None, figsize=None, blinks=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plots a segmentation using NSLR's original segmentation (including smoothing). Not
+intended for general use.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_nslr_segmentation(time_array, gaze_array, segmentation, seg_class, trial_info=None,
+                           title=None, stimulus=None, figsize=None, blinks=None):
+    &#34;&#34;&#34;Plots a segmentation using NSLR&#39;s original segmentation (including smoothing). Not
+    intended for general use.
+    &#34;&#34;&#34;
+    VAR_NAMES = [&#34;Theta&#34;, &#34;Phi&#34;]
+    
+    f, axes = plt.subplots(2, 1, sharex=True, figsize=figsize)
+    f.subplots_adjust(hspace=0)
+    f.suptitle(title)  # , fontsize=16)
+
+    # the limits are defined as 2 std devs from mean
+    y_lims = np.array(gaze_array).std(axis=0) * 2
+
+    for idx, ax in enumerate(axes):
+
+        # construct a plotting frame
+        ax.set_ylabel(VAR_NAMES[idx] + &#34;: Rot. in degrees&#34;)
+        ax.set_ylim([-y_lims[idx], y_lims[idx]])
+        ax.axhline(y=0, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
+        ax.axhline(y=-20, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
+        ax.axhline(y=20, color=&#34;lightgray&#34;, linestyle=&#34;--&#34;)
+
+
+        ax.plot(time_array, gaze_array[:,idx], &#39;.&#39;)
+        if not isinstance(stimulus, type(None)):
+            st_id = [&#34;X_Position&#34;, &#34;Y_Position&#34;]
+            ax.plot(stimulus[&#34;Timestamp&#34;].to_numpy(), stimulus[st_id[idx]].to_numpy(), &#34;--&#34;, color=&#34;lightblue&#34;)
+
+        for i, seg in enumerate(segmentation.segments):
+            cls = seg_class[i]
+            if (seg.t[0] &gt; time_array[0]) and (seg.t[1] &lt; time_array[-1]): 
+                ax.plot(seg.t, np.array(seg.x)[:, idx], color=COLORS[cls])
+
+    if trial_info != None and len(trial_info) &gt; 0:
+        y_pos = - y_lims[1] * 0.95  # min([i[0] for i in gaze_array])
+        x_pos = (time_array[-1] - time_array[1]) / 150
+
+        for key in trial_info:
+            axes[0].axvline(x=float(key), linestyle=&#34;--&#34;)
+            axes[1].axvline(x=float(key), linestyle=&#34;--&#34;)
+            axes[1].text(float(key) + x_pos, y_pos,
+                         &#34;Event: {}&#34;.format(trial_info[key]), rotation=90,
+                         verticalalignment=&#39;bottom&#39;, color=&#39;#1f77b4&#39;)  #, weight=&#34;bold&#34;)
+
+    
+    leg_artists = [plt.Line2D((0,1),(0,0), marker=&#39;.&#39;, linestyle=&#39;&#39;)] + \
+                  [plt.Line2D((0,1),(0,0), color=color) for color in COLORS.values()]
+    leg_indicators = [&#34;Orig. Samples&#34;, &#34;Fixation&#34;, &#34;Saccade&#34;, &#34;Smooth Pursuit&#34;, &#34;PSO&#34;]
+    plt.legend(leg_artists, leg_indicators, loc=&#34;lower right&#34;, title=&#34;Gaze Classification&#34;)
+    
+        
+    if not isinstance(stimulus, type(None)):
+        leg_artists = leg_artists + [plt.Line2D((0,1),(0,0),  linestyle=&#39;--&#39;, color=&#34;lightblue&#34;)]
+        leg_indicators = leg_indicators + [&#34;Stimulus data&#34;]
+        
+    plt.legend(leg_artists, leg_indicators, loc=&#34;lower right&#34;, title=&#34;Gaze Classification&#34;)
+    plt.xlabel(&#34;Time in seconds&#34;)</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -791,9 +791,9 @@ to plt.arrow() when plotting the Saccade arrows. Default={}.</dd>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="cateye.visualization.plot_nslr_segmentation" href="#cateye.visualization.plot_nslr_segmentation">plot_nslr_segmentation</a></code></li>
 <li><code><a title="cateye.visualization.plot_segmentation" href="#cateye.visualization.plot_segmentation">plot_segmentation</a></code></li>
 <li><code><a title="cateye.visualization.plot_trajectory" href="#cateye.visualization.plot_trajectory">plot_trajectory</a></code></li>
+<li><code><a title="cateye.visualization.plot_nslr_segmentation" href="#cateye.visualization.plot_nslr_segmentation">plot_nslr_segmentation</a></code></li>
 </ul>
 </li>
 </ul>

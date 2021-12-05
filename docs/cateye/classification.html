@@ -574,171 +574,6 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="cateye.classification.classify_dispersion"><code class="name flex">
-<span>def <span class="ident">classify_dispersion</span></span>(<span>x, y, time, threshold, window_len, return_discrete=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>I-DT dispersion algorithm from Salvucci &amp; Goldberg (2000).</p>
-<p>The I-DT algorithm classifies fixations by checking if the dispersion of
-samples within a certain window does not surpass a predefined threshold.
-I-DT can separate between the following classes:</p>
-<pre><code>Fixation, Saccade
-</code></pre>
-<p>For reference see:</p>
-<hr>
-<p>Salvucci, D. D., &amp; Goldberg, J. H. (2000). Identifying fixations
-and saccades in eye-tracking protocols. In Proceedings of the
-2000 symposium on Eye tracking research &amp; applications (pp. 71-78).</p>
-<hr>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>x</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
-<dd>A 1D-array representing the x-axis of your gaze data.</dd>
-<dt><strong><code>y</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
-<dd>A 1D-array representing the y-axis of your gaze data.</dd>
-<dt><strong><code>time</code></strong> :&ensp;<code>float</code> or <code>array</code> of <code>float</code></dt>
-<dd>Either a 1D-array representing the sampling times of the gaze
-arrays or a float/int that represents the sampling rate.</dd>
-<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
-<dd>The maximally allowed dispersion (difference of x/y min and
-max values) within <code>window_len</code> in order to be counted as a
-Fixation. Value depends on the unit of your gaze data.</dd>
-<dt><strong><code>window_len</code></strong> :&ensp;<code>float</code></dt>
-<dd>The window length in seconds within which the dispersion is
-calculated.</dd>
-<dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
-<dd>If True, returns the output in discrete format, if False, in
-continuous format (matching the gaze array). Default=False.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>segments</code></strong> :&ensp;<code>array</code> of <code>(int, float)</code></dt>
-<dd>Either the event indices (continuous format) or the event
-times (discrete format), indicating the start of a new segment.</dd>
-<dt><strong><code>classes</code></strong> :&ensp;<code>array</code> of <code>str</code></dt>
-<dd>The predicted class corresponding to each element in <code>segments</code>.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False):
-    &#34;&#34;&#34;I-DT dispersion algorithm from Salvucci &amp; Goldberg (2000).
-    
-    The I-DT algorithm classifies fixations by checking if the dispersion of 
-    samples within a certain window does not surpass a predefined threshold.
-    I-DT can separate between the following classes:
-    ```
-    Fixation, Saccade
-    ```
-    
-    For reference see:
-    
-    ---
-    Salvucci, D. D., &amp; Goldberg, J. H. (2000). Identifying fixations 
-    and saccades in eye-tracking protocols. In Proceedings of the 
-    2000 symposium on Eye tracking research &amp; applications (pp. 71-78).
-    ---
-    
-    Parameters
-    ----------
-    x : array of float
-        A 1D-array representing the x-axis of your gaze data.
-    y : array of float
-        A 1D-array representing the y-axis of your gaze data.
-    time : float or array of float
-        Either a 1D-array representing the sampling times of the gaze 
-        arrays or a float/int that represents the sampling rate.
-    threshold : float
-        The maximally allowed dispersion (difference of x/y min and 
-        max values) within `window_len` in order to be counted as a 
-        Fixation. Value depends on the unit of your gaze data.
-    window_len : float
-        The window length in seconds within which the dispersion is 
-        calculated.
-    return_discrete : bool
-        If True, returns the output in discrete format, if False, in
-        continuous format (matching the gaze array). Default=False.
-        
-    Returns
-    -------
-    segments : array of (int, float)
-        Either the event indices (continuous format) or the event 
-        times (discrete format), indicating the start of a new segment.
-    classes : array of str
-        The predicted class corresponding to each element in `segments`.
-    &#34;&#34;&#34;
-
-    def _disp(win_x, win_y):
-        &#34;&#34;&#34;Calculate the dispersion of a window.&#34;&#34;&#34;
-        delta_x = np.max(win_x) - np.min(win_x)
-        delta_y =np.max(win_y) - np.min(win_y)
-        return delta_x + delta_y
-    
-    # process time argument
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
-    
-    # infer number of samples from windowlen
-    n_samples = int(sfreq * window_len)
-
-    # per default everything is a saccade
-    segments = np.zeros(len(x), dtype=int)
-    classes = np.empty(len(x), dtype=object)
-    classes[0:] = &#34;Saccade&#34;
-    
-    # set start window and segment
-    i_start = 0
-    i_stop = n_samples
-    seg_idx = 0
-    
-    while i_stop &lt;= len(x):
-        
-        # set the current window
-        win_x = x[i_start:i_stop]
-        win_y = y[i_start:i_stop]
-        
-        # if we&#39;re in a Fixation
-        if _disp(win_x, win_y) &lt;= threshold:
-            
-            # start a fixation segment
-            seg_idx += 1
-            
-            # as long as we&#39;re in the fixation
-            while _disp(win_x, win_y) &lt;= threshold and i_stop &lt; len(x):
-                
-                # make the chunk larger
-                i_stop += 1
-                win_x = x[i_start:i_stop]
-                win_y = y[i_start:i_stop]
-            
-            # mark it
-            classes[i_start:i_stop] = &#34;Fixation&#34;
-            segments[i_start:i_stop] = seg_idx
-            
-            # start looking at a new chunk
-            i_start = i_stop
-            i_stop = i_stop + n_samples
-            seg_idx += 1
-            
-        else:
-            # move window point further
-            segments[i_start:i_stop] = seg_idx
-            i_start += 1
-            i_stop = i_start + n_samples
-    
-    # return output
-    if return_discrete:
-        segments, classes = continuous_to_discrete(times, segments, classes)
-    return segments, classes</code></pre>
-</details>
-</dd>
 <dt id="cateye.classification.classify_nslr_hmm"><code class="name flex">
 <span>def <span class="ident">classify_nslr_hmm</span></span>(<span>x, y, time, return_discrete=False, return_orig_output=False, **nslr_kwargs)</span>
 </code></dt>
@@ -1204,6 +1039,171 @@ times (discrete format), indicating the start of a new segment.</dd>
     return segments, classes</code></pre>
 </details>
 </dd>
+<dt id="cateye.classification.classify_dispersion"><code class="name flex">
+<span>def <span class="ident">classify_dispersion</span></span>(<span>x, y, time, threshold, window_len, return_discrete=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>I-DT dispersion algorithm from Salvucci &amp; Goldberg (2000).</p>
+<p>The I-DT algorithm classifies fixations by checking if the dispersion of
+samples within a certain window does not surpass a predefined threshold.
+I-DT can separate between the following classes:</p>
+<pre><code>Fixation, Saccade
+</code></pre>
+<p>For reference see:</p>
+<hr>
+<p>Salvucci, D. D., &amp; Goldberg, J. H. (2000). Identifying fixations
+and saccades in eye-tracking protocols. In Proceedings of the
+2000 symposium on Eye tracking research &amp; applications (pp. 71-78).</p>
+<hr>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the x-axis of your gaze data.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the y-axis of your gaze data.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code> or <code>array</code> of <code>float</code></dt>
+<dd>Either a 1D-array representing the sampling times of the gaze
+arrays or a float/int that represents the sampling rate.</dd>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
+<dd>The maximally allowed dispersion (difference of x/y min and
+max values) within <code>window_len</code> in order to be counted as a
+Fixation. Value depends on the unit of your gaze data.</dd>
+<dt><strong><code>window_len</code></strong> :&ensp;<code>float</code></dt>
+<dd>The window length in seconds within which the dispersion is
+calculated.</dd>
+<dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, returns the output in discrete format, if False, in
+continuous format (matching the gaze array). Default=False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>segments</code></strong> :&ensp;<code>array</code> of <code>(int, float)</code></dt>
+<dd>Either the event indices (continuous format) or the event
+times (discrete format), indicating the start of a new segment.</dd>
+<dt><strong><code>classes</code></strong> :&ensp;<code>array</code> of <code>str</code></dt>
+<dd>The predicted class corresponding to each element in <code>segments</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False):
+    &#34;&#34;&#34;I-DT dispersion algorithm from Salvucci &amp; Goldberg (2000).
+    
+    The I-DT algorithm classifies fixations by checking if the dispersion of 
+    samples within a certain window does not surpass a predefined threshold.
+    I-DT can separate between the following classes:
+    ```
+    Fixation, Saccade
+    ```
+    
+    For reference see:
+    
+    ---
+    Salvucci, D. D., &amp; Goldberg, J. H. (2000). Identifying fixations 
+    and saccades in eye-tracking protocols. In Proceedings of the 
+    2000 symposium on Eye tracking research &amp; applications (pp. 71-78).
+    ---
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    time : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    threshold : float
+        The maximally allowed dispersion (difference of x/y min and 
+        max values) within `window_len` in order to be counted as a 
+        Fixation. Value depends on the unit of your gaze data.
+    window_len : float
+        The window length in seconds within which the dispersion is 
+        calculated.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the gaze array). Default=False.
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    &#34;&#34;&#34;
+
+    def _disp(win_x, win_y):
+        &#34;&#34;&#34;Calculate the dispersion of a window.&#34;&#34;&#34;
+        delta_x = np.max(win_x) - np.min(win_x)
+        delta_y =np.max(win_y) - np.min(win_y)
+        return delta_x + delta_y
+    
+    # process time argument
+    if hasattr(time, &#39;__iter__&#39;):
+        times = np.array(time)
+        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
+            warnings.warn(WARN_SFREQ)
+        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
+    else:
+        times = np.arange(0, len(x), 1 / time)
+        sfreq = time
+    
+    # infer number of samples from windowlen
+    n_samples = int(sfreq * window_len)
+
+    # per default everything is a saccade
+    segments = np.zeros(len(x), dtype=int)
+    classes = np.empty(len(x), dtype=object)
+    classes[0:] = &#34;Saccade&#34;
+    
+    # set start window and segment
+    i_start = 0
+    i_stop = n_samples
+    seg_idx = 0
+    
+    while i_stop &lt;= len(x):
+        
+        # set the current window
+        win_x = x[i_start:i_stop]
+        win_y = y[i_start:i_stop]
+        
+        # if we&#39;re in a Fixation
+        if _disp(win_x, win_y) &lt;= threshold:
+            
+            # start a fixation segment
+            seg_idx += 1
+            
+            # as long as we&#39;re in the fixation
+            while _disp(win_x, win_y) &lt;= threshold and i_stop &lt; len(x):
+                
+                # make the chunk larger
+                i_stop += 1
+                win_x = x[i_start:i_stop]
+                win_y = y[i_start:i_stop]
+            
+            # mark it
+            classes[i_start:i_stop] = &#34;Fixation&#34;
+            segments[i_start:i_stop] = seg_idx
+            
+            # start looking at a new chunk
+            i_start = i_stop
+            i_stop = i_stop + n_samples
+            seg_idx += 1
+            
+        else:
+            # move window point further
+            segments[i_start:i_stop] = seg_idx
+            i_start += 1
+            i_stop = i_start + n_samples
+    
+    # return output
+    if return_discrete:
+        segments, classes = continuous_to_discrete(times, segments, classes)
+    return segments, classes</code></pre>
+</details>
+</dd>
 <dt id="cateye.classification.mad_velocity_thresh"><code class="name flex">
 <span>def <span class="ident">mad_velocity_thresh</span></span>(<span>x, y, time, th_0=200, return_past_threshs=False)</span>
 </code></dt>
@@ -1366,10 +1366,10 @@ if <code>return_past_thresholds</code> is True.</dd>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="cateye.classification.classify_dispersion" href="#cateye.classification.classify_dispersion">classify_dispersion</a></code></li>
 <li><code><a title="cateye.classification.classify_nslr_hmm" href="#cateye.classification.classify_nslr_hmm">classify_nslr_hmm</a></code></li>
 <li><code><a title="cateye.classification.classify_remodnav" href="#cateye.classification.classify_remodnav">classify_remodnav</a></code></li>
 <li><code><a title="cateye.classification.classify_velocity" href="#cateye.classification.classify_velocity">classify_velocity</a></code></li>
+<li><code><a title="cateye.classification.classify_dispersion" href="#cateye.classification.classify_dispersion">classify_dispersion</a></code></li>
 <li><code><a title="cateye.classification.mad_velocity_thresh" href="#cateye.classification.mad_velocity_thresh">mad_velocity_thresh</a></code></li>
 </ul>
 </li>
