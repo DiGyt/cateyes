@@ -129,7 +129,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     """REMoDNaV robust eye movement prediction by Dar, Wagner, & Hanke (2021).
     
     REMoDNaV is a fixation-based algorithm which is derived from the Nyström & Holmqvist 
-    (2010) algorithm, but adds various extension. Its aimed to provide robust 
+    (2010) algorithm, but adds various extension. It aims to provide robust 
     classification under different eye tracking settings. REMoDNaV can separate between 
     the following classes:
     ```
