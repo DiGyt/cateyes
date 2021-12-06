@@ -1,7 +1,7 @@
 <img src="/docs/files/imgs/cateye_header.png" alt="CatEyes logo" height="100"/>
 
 ___
-### Simplified Categorization for Eye Tracking in Python
+### Categorization for Eye Tracking - Simplified
 
 - [Introduction](#introduction)
 - [Installation](#installation)
