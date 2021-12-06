@@ -156,8 +156,8 @@ def coords_to_degree(x, viewing_dist, screen_max, screen_min=None):
         same unit as `screen_max` and `screen_min`.
     screen_max : float, tuple/list of float
         The maximum screen coordinates measured in the same unit as 
-        `viewing_dist` and `screen_min`. If `x` is a 2D array, `
-        screen_max` must be an iterable of the same length as `x`. 
+        `viewing_dist` and `screen_min`. If `x` is a 2D array, 
+        `screen_max` must be an iterable of the same length as `x`. 
     screen_min : float, tuple/list of float
         The minimum screen coordinates measured in the same unit as 
         `viewing_dist` and `screen_min`. If `x` is a 2D array, 
