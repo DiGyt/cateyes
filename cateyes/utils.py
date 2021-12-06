@@ -4,14 +4,14 @@
 # License: BSD-3-Clause
 
 """
-cateye.utils provides utility functions to convert and handle data.
+cateyes.utils provides utility functions to convert and handle data.
 """
 
 import numpy as np
 
 
 def sample_data_path(name):
-    """return the static path to a CatEye sample dataset.
+    """return the static path to a CatEyes sample dataset.
     
     Parameters
     ----------

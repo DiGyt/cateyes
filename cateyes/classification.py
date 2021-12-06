@@ -4,7 +4,7 @@
 # License: BSD-3-Clause
 
 """
-In cateye.classification you can find all available classification 
+In cateyes.classification you can find all available classification 
 algorithms.
 """
 

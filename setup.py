@@ -6,7 +6,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "cateye",
+    name = "cateyes",
     version = "0.0.3",
 
     author = "Dirk Gütlin",
@@ -14,8 +14,8 @@ setup(
     description = ("Uniform Categorization of Eyetracking in Python."),
     license = "BSD-3",
     keywords = "Eyetracking classification",
-    url = "https://github.com/DiGyt/CatEye",
-    packages=['cateye'],
+    url = "https://github.com/DiGyt/cateyes",
+    packages=['cateyes'],
     include_package_data=True,
     long_description=read('README.md'),
     classifiers=[

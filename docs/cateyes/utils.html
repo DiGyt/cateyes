@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>cateye.utils API documentation</title>
-<meta name="description" content="cateye.utils provides utility functions to convert and handle data." />
+<title>cateyes.utils API documentation</title>
+<meta name="description" content="cateyes.utils provides utility functions to convert and handle data." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,10 +19,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>cateye.utils</code></h1>
+<h1 class="title">Module <code>cateyes.utils</code></h1>
 </header>
 <section id="section-intro">
-<p>cateye.utils provides utility functions to convert and handle data.</p>
+<p>cateyes.utils provides utility functions to convert and handle data.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -33,14 +33,14 @@
 # License: BSD-3-Clause
 
 &#34;&#34;&#34;
-cateye.utils provides utility functions to convert and handle data.
+cateyes.utils provides utility functions to convert and handle data.
 &#34;&#34;&#34;
 
 import numpy as np
 
 
 def sample_data_path(name):
-    &#34;&#34;&#34;return the static path to a CatEye sample dataset.
+    &#34;&#34;&#34;return the static path to a CatEyes sample dataset.
     
     Parameters
     ----------
@@ -284,11 +284,11 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="cateye.utils.sample_data_path"><code class="name flex">
+<dt id="cateyes.utils.sample_data_path"><code class="name flex">
 <span>def <span class="ident">sample_data_path</span></span>(<span>name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>return the static path to a CatEye sample dataset.</p>
+<div class="desc"><p>return the static path to a CatEyes sample dataset.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
@@ -306,7 +306,7 @@ machine.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def sample_data_path(name):
-    &#34;&#34;&#34;return the static path to a CatEye sample dataset.
+    &#34;&#34;&#34;return the static path to a CatEyes sample dataset.
     
     Parameters
     ----------
@@ -326,7 +326,7 @@ machine.</dd>
     return op.abspath(data_path)</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.discrete_to_continuous"><code class="name flex">
+<dt id="cateyes.utils.discrete_to_continuous"><code class="name flex">
 <span>def <span class="ident">discrete_to_continuous</span></span>(<span>times, discrete_times, discrete_values)</span>
 </code></dt>
 <dd>
@@ -410,12 +410,12 @@ array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
     return indices, values</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.continuous_to_discrete"><code class="name flex">
+<dt id="cateyes.utils.continuous_to_discrete"><code class="name flex">
 <span>def <span class="ident">continuous_to_discrete</span></span>(<span>times, indices, values)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Matches an array of discrete events to a continuous time series.
-Reverse function of <code><a title="cateye.utils.discrete_to_continuous" href="#cateye.utils.discrete_to_continuous">discrete_to_continuous()</a></code>.</p>
+Reverse function of <code><a title="cateyes.utils.discrete_to_continuous" href="#cateyes.utils.discrete_to_continuous">discrete_to_continuous()</a></code>.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>times</code></strong> :&ensp;<code>array</code> of <code>(float, int)</code></dt>
@@ -482,7 +482,7 @@ corresponding to <code>discrete_times</code>. Is the same length as
     return discrete_times, discrete_values</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.sfreq_to_times"><code class="name flex">
+<dt id="cateyes.utils.sfreq_to_times"><code class="name flex">
 <span>def <span class="ident">sfreq_to_times</span></span>(<span>gaze_array, sfreq, start_time=0)</span>
 </code></dt>
 <dd>
@@ -527,7 +527,7 @@ Default = 0.</dd>
     return np.arange(0, len(gaze_array) / sfreq, 1. / sfreq) + start_time</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.coords_to_degree"><code class="name flex">
+<dt id="cateyes.utils.coords_to_degree"><code class="name flex">
 <span>def <span class="ident">coords_to_degree</span></span>(<span>x, viewing_dist, screen_max, screen_min=None)</span>
 </code></dt>
 <dd>
@@ -619,7 +619,7 @@ same unit as <code>screen_max</code> and <code>screen_min</code>.</dd>
     return x</code></pre>
 </details>
 </dd>
-<dt id="cateye.utils.pixel_to_degree"><code class="name flex">
+<dt id="cateyes.utils.pixel_to_degree"><code class="name flex">
 <span>def <span class="ident">pixel_to_degree</span></span>(<span>x, viewing_dist, screen_size, screen_res)</span>
 </code></dt>
 <dd>
@@ -715,17 +715,17 @@ same length as <code>x</code>.</dd>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="cateye" href="index.html">cateye</a></code></li>
+<li><code><a title="cateyes" href="index.html">cateyes</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="cateye.utils.sample_data_path" href="#cateye.utils.sample_data_path">sample_data_path</a></code></li>
-<li><code><a title="cateye.utils.discrete_to_continuous" href="#cateye.utils.discrete_to_continuous">discrete_to_continuous</a></code></li>
-<li><code><a title="cateye.utils.continuous_to_discrete" href="#cateye.utils.continuous_to_discrete">continuous_to_discrete</a></code></li>
-<li><code><a title="cateye.utils.sfreq_to_times" href="#cateye.utils.sfreq_to_times">sfreq_to_times</a></code></li>
-<li><code><a title="cateye.utils.coords_to_degree" href="#cateye.utils.coords_to_degree">coords_to_degree</a></code></li>
-<li><code><a title="cateye.utils.pixel_to_degree" href="#cateye.utils.pixel_to_degree">pixel_to_degree</a></code></li>
+<li><code><a title="cateyes.utils.sample_data_path" href="#cateyes.utils.sample_data_path">sample_data_path</a></code></li>
+<li><code><a title="cateyes.utils.discrete_to_continuous" href="#cateyes.utils.discrete_to_continuous">discrete_to_continuous</a></code></li>
+<li><code><a title="cateyes.utils.continuous_to_discrete" href="#cateyes.utils.continuous_to_discrete">continuous_to_discrete</a></code></li>
+<li><code><a title="cateyes.utils.sfreq_to_times" href="#cateyes.utils.sfreq_to_times">sfreq_to_times</a></code></li>
+<li><code><a title="cateyes.utils.coords_to_degree" href="#cateyes.utils.coords_to_degree">coords_to_degree</a></code></li>
+<li><code><a title="cateyes.utils.pixel_to_degree" href="#cateyes.utils.pixel_to_degree">pixel_to_degree</a></code></li>
 </ul>
 </li>
 </ul>

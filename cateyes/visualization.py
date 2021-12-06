@@ -4,7 +4,7 @@
 # License: BSD-3-Clause
 
 """
-cateye.visualization implements functions to plot and visualize classified 
+cateyes.visualization implements functions to plot and visualize classified 
 Eyetracking data.
 """
 

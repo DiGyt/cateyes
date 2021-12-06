@@ -6,7 +6,7 @@
 """
 .. image:: ./../files/imgs/cateye_header.png
 
-Welcome to the CatEye documentation.
+Welcome to the CatEyes documentation.
 
 You find the documentation to all available functions by clicking on
 the respective submodules.
