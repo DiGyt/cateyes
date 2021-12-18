@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, feel free to cite it:"
+authors:
+- family-names: "Gütlin"
+  given-names: "Dirk"
+  orcid: " https://orcid.org/0000-0003-3822-896X"
+title: "cateyes"
+version: 0.0.3
+date-released: 2021-12-18
+url: "https://github.com/DiGyt/cateyes"
