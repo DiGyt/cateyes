@@ -24,8 +24,8 @@ N_COLS = {'Fixation': 'blue',
           'PSO': 'yellow',
           'High-Velocity PSO': 'gold',
           'Low-Velocity PSO': 'greenyellow',
-          'High-Velocity PSO (NCB)': 'goldenrod',
-          'Low-Velocity PSO (NCB)': 'yellowgreen',
+          'High-Velocity PSO (ISI)': 'goldenrod',
+          'Low-Velocity PSO (ISI)': 'yellowgreen',
           'None':'grey',}
 
 
