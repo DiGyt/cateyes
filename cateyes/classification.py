@@ -276,7 +276,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     threshold : float
         The maximally allowed velocity after which a sample should be 
         classified as "Saccade". Threshold can be interpreted as
-        `gaze_units/ms`, with `gaze_units` being the spatial unit of 
+        `gaze_units/s`, with `gaze_units` being the spatial unit of 
         your eyetracking data (e.g. pixels, cm, degrees).
     return_discrete : bool
         If True, returns the output in discrete format, if False, in
@@ -299,7 +299,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     else:
         times = np.arange(0, len(x), 1 / time)
         sfreq = time
-    sample_thresh = sfreq * threshold / 1000
+    sample_thresh = threshold/sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
