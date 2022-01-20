@@ -299,7 +299,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     else:
         times = np.arange(0, len(x), 1 / time)
         sfreq = time
-    sample_thresh = threshold/sfreq
+    sample_thresh = threshold / sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
@@ -470,7 +470,7 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
         arrays or a float/int that represents the sampling rate.
     th_0 : float
         The initial threshold used at start. Threshold can be interpreted 
-        as `gaze_units/ms`, with `gaze_units` being the spatial unit of 
+        as `gaze_units/s`, with `gaze_units` being the spatial unit of 
         your eyetracking data (e.g. pixels, cm, degrees). Defaults to 200.
     return_past_thresholds : bool
         Whether to additionally return a list of all thresholds used 
@@ -501,6 +501,8 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
     else:
         times = np.arange(0, len(x), 1 / time)
         sfreq = time
+    # get init thresh per sample
+    th_0 = th_0 / sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
@@ -527,8 +529,8 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
             break
     
     # revert units
-    saccade_thresh = saccade_thresh * 1000 / sfreq
-    threshs = [i * 1000 / sfreq for i in threshs]
+    saccade_thresh = saccade_thresh * sfreq
+    threshs = [i * sfreq for i in threshs]
     
     if return_past_threshs:
         return saccade_thresh, threshs
