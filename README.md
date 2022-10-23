@@ -77,4 +77,14 @@ CatEyes' documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) a
 Note for myself: build the documentation with:
 cd cateye_head_dir
 pdoc3 --html --output-dir docs cateyes -f -c sort_identifiers=False
+
+Second Note: Deploy on PyPI like:
+git clone https://github.com/DiGyt/cateyes.git
+pip install cateyes/.
+rm -rf dist
+python cateyes/setup.py sdist
+python cateyes/setup.py bdist_wheel
+pip install twine
+twine check dist/*
+twine upload dist/*
 -->
