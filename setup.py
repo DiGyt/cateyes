@@ -29,7 +29,7 @@ setup(
         "scipy",
         "matplotlib",
         "remodnav",
-        #"nslr @ git+https://github.com/pupil-labs/nslr",
-        #"nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
+        "nslr @ git+https://github.com/pupil-labs/nslr",
+        "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
     ],
 )
