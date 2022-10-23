@@ -35,7 +35,7 @@ However, proper PyPI support might follow.
 
 CatEyes is intended to work on a simple and intuitive level. This includes reducing all the overhead from external classification algorithms and relying on fundamental Python objects that can be used with whatever data format and workflow you are working.
 ```python
-classification = cateyes.classify_nslr_hmm(times, gaze_x, gaze_y)
+classification = cateyes.classify_nslr_hmm(gaze_x, gaze_y, times)
 ```
 
 CatEyes also provides simple but flexible plotting functions which can be used to visualize classified gaze data and can be further customized with matplotlib.pyplot.
