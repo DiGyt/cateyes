@@ -261,9 +261,9 @@ def _get_time(x, time, warn_sfreq=False):
         times = np.array(time)
         if warn_sfreq and (np.std(times[1:] - times[:-1]) > 1e-5):
             warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
+        sfreq = 1. / np.mean(times[1:] - times[:-1]) 
     else:
         # create times array from sfreq
         sfreq = time
-        times = np.arange(0, len(x) / sfreq, 1 / sfreq)
+        times = sfreq_to_times(x, sfreq)
     return times, sfreq
