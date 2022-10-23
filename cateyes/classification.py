@@ -284,7 +284,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     # calculate movement velocities
     gaze = np.stack([x, y])
     vels = np.linalg.norm(gaze[:, 1:] - gaze[:, :-1], axis=0)
-    vels = np.concatenate([[0.], vels])
+    vels = np.concatenate([vels, [0.]])
     
     # define classes by threshold
     classes = np.empty(len(x), dtype=object)
