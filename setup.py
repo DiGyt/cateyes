@@ -31,7 +31,5 @@ setup(
         "remodnav",
         #"nslr @ git+https://github.com/pupil-labs/nslr",
         #"nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
-        "nslr @ git+ssh://git@github.com:pupil-labs/nslr.git",
-        "nslr_hmm @ git+ssh://git@github.com:pupil-labs/nslr-hmm.git",
     ],
 )
