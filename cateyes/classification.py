@@ -11,13 +11,7 @@ algorithms.
 import numpy as np
 import nslr_hmm
 from remodnav.clf import EyegazeClassifier
-from .utils import discrete_to_continuous, continuous_to_discrete
-
-import warnings
-
-WARN_SFREQ = "\n\nIrregular sampling rate detected. This can lead to impaired " \
-            "performance with this classifier. Consider resampling your data to " \
-            "a fixed sampling rate. Setting sampling rate to average sample difference."
+from .utils import discrete_to_continuous, continuous_to_discrete, _get_time
 
 CLASSES = {nslr_hmm.FIXATION: 'Fixation',
            nslr_hmm.SACCADE: 'Saccade',
@@ -98,7 +92,7 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     
     # extract gaze and time array
     gaze_array = np.vstack([x, y]).T
-    time_array = np.array(time) if hasattr(time, '__iter__') else np.arange(0, len(x), 1/time)
+    time_array, sfreq = _get_time(x, time)
     
     # classify using NSLR-HMM
     sample_class, seg, seg_class = nslr_hmm.classify_gaze(time_array, gaze_array,
@@ -208,14 +202,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     """
     
     # process time argument
-    if hasattr(time, '__iter__'):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) > 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # format and preprocess the data
     data = np.core.records.fromarrays([x, y], names=["x", "y"])
@@ -291,14 +278,7 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
         The predicted class corresponding to each element in `segments`.
         """
     # process time argument and calculate sample threshold
-    if hasattr(time, '__iter__'):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) > 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
     
     # calculate movement velocities
@@ -379,14 +359,7 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
         return delta_x + delta_y
     
     # process time argument
-    if hasattr(time, '__iter__'):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) > 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # infer number of samples from windowlen
     n_samples = int(sfreq * window_len)
@@ -493,14 +466,7 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
     >>> segments, classes = classify_velocity(x, y, time, threshold)
     """
     # process time argument and calculate sample threshold
-    if hasattr(time, '__iter__'):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) > 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     # get init thresh per sample
     th_0 = th_0 / sfreq
     
