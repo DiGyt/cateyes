@@ -32,10 +32,6 @@ setup(
         "remodnav",
         "nslr @ git+https://github.com/pupil-labs/nslr",
         "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
-    ],
-    dependency_links=[
-        "git+https://github.com/pupil-labs/nslr",
-        "git+https://github.com/pupil-labs/nslr-hmm",
-        "git+https://github.com/berenslab/uneye.git",
+        "uneye @ git+https://github.com/berenslab/uneye.git",
     ],
 )
