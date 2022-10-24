@@ -7,7 +7,7 @@ def read(fname):
 
 setup(
     name = "cateyes",
-    version = "0.0.4",
+    version = "0.0.5",
 
     author = "Dirk Gütlin",
     author_email = "dirk.guetlin@gmail.com",
