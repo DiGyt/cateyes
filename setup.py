@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # Utility function to read the README file.
 def read(fname):
@@ -15,7 +15,8 @@ setup(
     license = "BSD-3",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/cateyes",
-    packages=['cateyes'],
+    package_dir = {"":"cateyes"},
+    packages = find_packages(where="cateyes"),
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
