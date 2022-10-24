@@ -31,9 +31,9 @@ setup(
         "scipy",
         "matplotlib",
         "remodnav",
-        "nslr @ git+https://github.com/pupil-labs/nslr",
-        #"nslr @ https://gitlab.com/nslr/nslr.git",
+        #"nslr @ git+https://github.com/pupil-labs/nslr",
+        "nslr @ git+https://gitlab.com/nslr/nslr.git",
         "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
-        "uneye @ git+https://github.com/berenslab/uneye.git",
+        #"uneye @ git+https://github.com/berenslab/uneye.git",  # uneye doesnt install weight data properly
     ],
 )
