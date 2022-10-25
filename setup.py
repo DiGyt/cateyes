@@ -16,12 +16,12 @@ NSLR_REQS = [
     #"nslr @ git+https://github.com/pupil-labs/nslr",
     "nslr @ git+https://gitlab.com/nslr/nslr.git",
     "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
-    #"nslr @ https://gitlab.com/nslr/nslr.git@b99f0b7b",
-    #"nslr_hmm @ https://github.com/pupil-labs/nslr-hmm.git@main",
+    #"nslr @ git+https://gitlab.com/nslr/nslr.git@b99f0b7b",
+    #"nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm.git@main",
 ]
 UNEYE_REQS = [
-    "uneye @ https://github.com/DiGyt/uneye.git",
-    #"uneye @ https://github.com/DiGyt/uneye.git@492c0268c8c0f3a6271d4b8f5832e24f1bc62848",
+    "uneye @ git+https://github.com/DiGyt/uneye.git",
+    #"uneye @ git+https://github.com/DiGyt/uneye.git@492c0268c8c0f3a6271d4b8f5832e24f1bc62848",
 ]
 
 setup(
@@ -34,9 +34,10 @@ setup(
     license = "BSD-3",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/cateyes",
-    package_dir = {"":"cateyes"},
+    #package_dir = {"":"cateyes"},
     packages = find_packages(where="cateyes"),
     #packages = ["cateyes"],
+    #packages = ["cateyes", "cateyes.classification", "cateyes.utils", "cateyes.visualization"],
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
