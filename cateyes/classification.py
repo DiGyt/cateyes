@@ -306,7 +306,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     U'n'Eye extension is not installed.
     Please reinstall cateyes with uneye extension, using:
     
-    `pip install git+https://github.com/DiGyt/cateyes.git[uneye] --force-reinstall`
+    `pip install git+https://github.com/DiGyt/cateyes.git#egg=project[uneye] --force-reinstall`
     
     Or by additionally installing our slim version of uneye:
     
