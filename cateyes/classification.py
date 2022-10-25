@@ -235,10 +235,8 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     """CNN-based saccade detection by Bellet et al. (2019).
     
     .. note::
-        In order to use this function, install the cateyes uneye extension:
-        ```
-        pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]
-        ```
+        In order to use this function, install the cateyes uneye extension:\n
+        `pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]`
     
     U'n'Eye employs a Convolutional Neural Network to classify
     saccades. This function allows classification based on a CNN
