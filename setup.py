@@ -5,6 +5,25 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+# define reqs
+REQS = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "remodnav",
+    ]
+NSLR_REQS = [
+    #"nslr @ git+https://github.com/pupil-labs/nslr",
+    "nslr @ git+https://gitlab.com/nslr/nslr.git",
+    "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
+    #"nslr @ https://gitlab.com/nslr/nslr.git@b99f0b7b",
+    #"nslr_hmm @ https://github.com/pupil-labs/nslr-hmm.git@main",
+]
+UNEYE_REQS = [
+    "uneye @ https://github.com/DiGyt/uneye.git",
+    #"uneye @ https://github.com/DiGyt/uneye.git@492c0268c8c0f3a6271d4b8f5832e24f1bc62848",
+]
+
 setup(
     name = "cateyes",
     version = "0.0.5",
@@ -15,9 +34,9 @@ setup(
     license = "BSD-3",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/cateyes",
-    #package_dir = {"":"cateyes"},
-    #packages = find_packages(where="cateyes"),
-    packages = ["cateyes"],
+    package_dir = {"":"cateyes"},
+    packages = find_packages(where="cateyes"),
+    #packages = ["cateyes"],
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -26,14 +45,11 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=[
-        "numpy",
-        "scipy",
-        "matplotlib",
-        "remodnav",
-        #"nslr @ git+https://github.com/pupil-labs/nslr",
-        "nslr @ git+https://gitlab.com/nslr/nslr.git",
-        "nslr_hmm @ git+https://github.com/pupil-labs/nslr-hmm",
-        #"uneye @ git+https://github.com/berenslab/uneye.git",  # uneye doesnt install weight data properly
-    ],
+    install_requires=REQS + NSLR_REQS + UNEYE_REQS,
+    #extras_require={
+    #    "nslr_hmm":NSLR_REQS,
+    #    "uneye":UNEYE_REQS,
+    #    "full":NSLR_REQS + UNEYE_REQS,
+    #},
+    #dependency_links= NSLR_REQS + UNEYE_REQS,
 )
