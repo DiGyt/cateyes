@@ -229,9 +229,9 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
         return segments, classes
 
     
-def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
+def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=1,
                    return_discrete=False, return_orig_output=False,
-                   weight_set='weights_1+2+3'):
+                   weight_set='weights_synthetic'):
     """CNN-based saccade detection by Bellet et al. (2019).
     
     .. note::
@@ -267,10 +267,10 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
         arrays or a float/int that represents the sampling rate.
     min_sacc_dur : int
         Minimum saccade duration (in ms) below which saccades will
-        be ignored, default=6ms.
+        be ignored. Default=6.
     min_sacc_dist : int
         Minimum temporal distance (in ms) between two saccades for
-        merging of saccades, default=0.
+        merging of saccades. Default=1.
     return_discrete : bool
         If True, returns the output in discrete format, if False, in
         continuous format (matching the gaze array). Default=False.
@@ -281,7 +281,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
         DNN weight set to use for prediction, can be ("weights_1+2+3",
         "weights_Andersson", "weights_dataset1", "weights_dataset2",
         "weights_dataset3", "weights_synthetic").
-        Default: 'weights_1+2+3'.
+        Default: 'weights_synthetic'.
 
         
     Returns
