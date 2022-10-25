@@ -237,7 +237,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     .. note::
         In order to use this function, install the cateyes uneye extension:
         ```
-        pip install cateyes[uneye]
+        pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]
         ```
     
     U'n'Eye employs a Convolutional Neural Network to classify
