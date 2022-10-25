@@ -232,6 +232,121 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
         return segments, classes
 
     
+def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
+                   return_discrete=False, return_orig_output=False,
+                   weight_set='weights_1+2+3'):
+    """CNN-based saccade detection by Bellet et al. (2019).
+    
+    *Note:*
+    In order to use this function, install the cateyes uneye extension:
+    ```
+    pip install cateyes[uneye]
+    ```
+    
+    U'n'Eye employs a Convolutional Neural Network to classify
+    saccades. This function allows classification based on a CNN
+    pretrained by the U'n'Eye authors. U'n'Eye can separate 
+    between the following classes:
+    ```
+    Fixation, Saccade
+    ```
+    
+    For more information and documentation, see the [original implementation].
+    [original implementation]: https://github.com/berenslab/uneye
+    
+    For reference see:
+    
+    ---
+    Bellet, M. E., Bellet, J., Nienborg, H., Hafed, Z. M., & Berens, P. 
+    (2019). Human-level saccade detection performance using deep neural 
+    networks. Journal of neurophysiology, 121(2), 646-661.
+    ---
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    time : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    min_sacc_dur : int
+        Minimum saccade duration (in ms) below which saccades will
+        be ignored, default=6ms.
+    min_sacc_dist : int
+        Minimum temporal distance (in ms) between two saccades for
+        merging of saccades, default=0.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the gaze array). Default=False.
+    return_orig_output : bool
+        If True, additionally return REMoDNaV's original segmentation 
+        events as output. Default=False.
+    weight_set : str
+        DNN weight set to use for prediction, can be ("weights_1+2+3",
+        "weights_Andersson", "weights_dataset1", "weights_dataset2",
+        "weights_dataset3", "weights_synthetic").
+        Default: 'weights_1+2+3'.
+
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    probs : array
+        The original softmax probabilities returned by the U'n'Eye net.
+        Only returned if `return_orig_output = True`.
+        """
+    # check installation
+    msg = """
+    U'n'Eye extension is not installed.
+    Please reinstall cateyes with uneye extension, using:
+    
+    `pip install git+https://github.com/DiGyt/cateyes.git[uneye] --force-reinstall`
+    
+    Or by additionally installing our slim version of uneye:
+    
+    `pip install git+https://github.com/DiGyt/uneye.git`
+    """
+    try:
+        from uneye import DNN
+    except ImportError:
+        raise ImportError(msg)
+
+    # process time argument
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
+    
+    # create and run model
+    model = DNN(weights_name=weight_set, sampfreq=sfreq,
+                min_sacc_dur=min_sacc_dur, min_sacc_dist=min_sacc_dist)
+    preds, probs = model.predict(x, y)
+    
+    # name classes
+    pred_dict = {0:"Fixation", 1:"Saccade"}
+    classes = np.array([pred_dict[pred] for pred in preds])
+
+    # group consecutive classes to one segment
+    segments = np.zeros(len(x), dtype=int)
+    for idx in range(1, len(classes)):
+        if classes[idx] == classes[idx - 1]:
+            segments[idx] = segments[idx - 1]
+        else:
+            segments[idx] = segments[idx - 1] + 1
+
+    # return output
+    if return_discrete:
+        segments, classes = continuous_to_discrete(times, segments, classes)
+        
+    if return_orig_output:
+        return segments, classes, probs
+    else:
+        return segments, classes
+
+    
 def classify_velocity(x, y, time, threshold, return_discrete=False):
     """I-VT velocity algorithm from Salvucci & Goldberg (2000).
     

@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # Utility function to read the README file.
 def read(fname):
@@ -34,10 +34,7 @@ setup(
     license = "BSD-3",
     keywords = "Eyetracking classification",
     url = "https://github.com/DiGyt/cateyes",
-    #package_dir = {"":"cateyes"},
-    #packages = find_packages(where="cateyes"),
     packages = ["cateyes"],
-    #packages = ["cateyes", "cateyes.classification", "cateyes.utils", "cateyes.visualization"],
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -46,11 +43,11 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=REQS + NSLR_REQS + UNEYE_REQS,
-    #extras_require={
-    #    "nslr_hmm":NSLR_REQS,
-    #    "uneye":UNEYE_REQS,
-    #    "full":NSLR_REQS + UNEYE_REQS,
-    #},
+    install_requires=REQS + NSLR_REQS,
+    extras_require={
+        #"nslr_hmm":NSLR_REQS,
+        "uneye":UNEYE_REQS,
+        #"full":NSLR_REQS + UNEYE_REQS,
+    },
     #dependency_links= NSLR_REQS + UNEYE_REQS,
 )
