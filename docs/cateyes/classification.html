@@ -376,7 +376,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
         return segments, classes
 
     
-def classify_velocity(x, y, time, threshold, return_discrete=False):
+def classify_velocity(x, y, time, threshold=None, return_discrete=False):
     &#34;&#34;&#34;I-VT velocity algorithm from Salvucci &amp; Goldberg (2000).
     
     One of several algorithms proposed in Salvucci &amp; Goldberg (2000),
@@ -408,7 +408,9 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
         The maximally allowed velocity after which a sample should be 
         classified as &#34;Saccade&#34;. Threshold can be interpreted as
         `gaze_units/s`, with `gaze_units` being the spatial unit of 
-        your eyetracking data (e.g. pixels, cm, degrees).
+        your eyetracking data (e.g. pixels, cm, degrees). If `None`,
+        `mad_velocity_thresh` is used to determine a threshold.
+        Default=`None`.
     return_discrete : bool
         If True, returns the output in discrete format, if False, in
         continuous format (matching the gaze array). Default=False.
@@ -424,6 +426,10 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     # process time argument and calculate sample threshold
     times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
+    
+    # find threshold if threshold is None
+    if threshold == None:
+        threshold = mad_velocity_thresh(x, y, times)
     
     # calculate movement velocities
     gaze = np.stack([x, y])
@@ -1163,7 +1169,7 @@ Only returned if <code>return_orig_output = True</code>.</dd>
 </details>
 </dd>
 <dt id="cateyes.classification.classify_velocity"><code class="name flex">
-<span>def <span class="ident">classify_velocity</span></span>(<span>x, y, time, threshold, return_discrete=False)</span>
+<span>def <span class="ident">classify_velocity</span></span>(<span>x, y, time, threshold=None, return_discrete=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>I-VT velocity algorithm from Salvucci &amp; Goldberg (2000).</p>
@@ -1192,7 +1198,9 @@ arrays or a float/int that represents the sampling rate.</dd>
 <dd>The maximally allowed velocity after which a sample should be
 classified as "Saccade". Threshold can be interpreted as
 <code>gaze_units/s</code>, with <code>gaze_units</code> being the spatial unit of
-your eyetracking data (e.g. pixels, cm, degrees).</dd>
+your eyetracking data (e.g. pixels, cm, degrees). If <code>None</code>,
+<code><a title="cateyes.classification.mad_velocity_thresh" href="#cateyes.classification.mad_velocity_thresh">mad_velocity_thresh()</a></code> is used to determine a threshold.
+Default=<code>None</code>.</dd>
 <dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
 <dd>If True, returns the output in discrete format, if False, in
 continuous format (matching the gaze array). Default=False.</dd>
@@ -1209,7 +1217,7 @@ times (discrete format), indicating the start of a new segment.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def classify_velocity(x, y, time, threshold, return_discrete=False):
+<pre><code class="python">def classify_velocity(x, y, time, threshold=None, return_discrete=False):
     &#34;&#34;&#34;I-VT velocity algorithm from Salvucci &amp; Goldberg (2000).
     
     One of several algorithms proposed in Salvucci &amp; Goldberg (2000),
@@ -1241,7 +1249,9 @@ times (discrete format), indicating the start of a new segment.</dd>
         The maximally allowed velocity after which a sample should be 
         classified as &#34;Saccade&#34;. Threshold can be interpreted as
         `gaze_units/s`, with `gaze_units` being the spatial unit of 
-        your eyetracking data (e.g. pixels, cm, degrees).
+        your eyetracking data (e.g. pixels, cm, degrees). If `None`,
+        `mad_velocity_thresh` is used to determine a threshold.
+        Default=`None`.
     return_discrete : bool
         If True, returns the output in discrete format, if False, in
         continuous format (matching the gaze array). Default=False.
@@ -1257,6 +1267,10 @@ times (discrete format), indicating the start of a new segment.</dd>
     # process time argument and calculate sample threshold
     times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
+    
+    # find threshold if threshold is None
+    if threshold == None:
+        threshold = mad_velocity_thresh(x, y, times)
     
     # calculate movement velocities
     gaze = np.stack([x, y])

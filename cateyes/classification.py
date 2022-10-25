@@ -345,7 +345,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
         return segments, classes
 
     
-def classify_velocity(x, y, time, threshold, return_discrete=False):
+def classify_velocity(x, y, time, threshold=None, return_discrete=False):
     """I-VT velocity algorithm from Salvucci & Goldberg (2000).
     
     One of several algorithms proposed in Salvucci & Goldberg (2000),
@@ -377,7 +377,9 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
         The maximally allowed velocity after which a sample should be 
         classified as "Saccade". Threshold can be interpreted as
         `gaze_units/s`, with `gaze_units` being the spatial unit of 
-        your eyetracking data (e.g. pixels, cm, degrees).
+        your eyetracking data (e.g. pixels, cm, degrees). If `None`,
+        `mad_velocity_thresh` is used to determine a threshold.
+        Default=`None`.
     return_discrete : bool
         If True, returns the output in discrete format, if False, in
         continuous format (matching the gaze array). Default=False.
@@ -393,6 +395,10 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
     # process time argument and calculate sample threshold
     times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
+    
+    # find threshold if threshold is None
+    if threshold == None:
+        threshold = mad_velocity_thresh(x, y, times)
     
     # calculate movement velocities
     gaze = np.stack([x, y])
