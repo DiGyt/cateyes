@@ -239,9 +239,7 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     
     *Note:*
     In order to use this function, install the cateyes uneye extension:
-    ```
-    pip install cateyes[uneye]
-    ```
+    `pip install cateyes[uneye]`
     
     U'n'Eye employs a Convolutional Neural Network to classify
     saccades. This function allows classification based on a CNN
@@ -281,8 +279,8 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
         If True, returns the output in discrete format, if False, in
         continuous format (matching the gaze array). Default=False.
     return_orig_output : bool
-        If True, additionally return REMoDNaV's original segmentation 
-        events as output. Default=False.
+        If True, additionally return U'n'Eye's original softmax
+        probabilities as an output. Default=False.
     weight_set : str
         DNN weight set to use for prediction, can be ("weights_1+2+3",
         "weights_Andersson", "weights_dataset1", "weights_dataset2",

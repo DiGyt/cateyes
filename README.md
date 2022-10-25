@@ -29,10 +29,7 @@ Currently, the way to install the package is:
 ```
 pip install git+https://github.com/DiGyt/cateyes.git
 ```
-If you want to use the U'n'Eye algorithm, you will have to install some additional requirements (mainly uneye and pytorch). You can do this by installing the extension:
-```
-pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]
-```
+However, proper PyPI support might follow.
 
 
 ## Examples
