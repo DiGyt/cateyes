@@ -37,6 +37,11 @@ cateyes.utils provides utility functions to convert and handle data.
 &#34;&#34;&#34;
 
 import numpy as np
+import warnings
+
+WARN_SFREQ = &#34;\n\nIrregular sampling rate detected. This can lead to impaired &#34; \
+            &#34;performance with this classifier. Consider resampling your data to &#34; \
+            &#34;a fixed sampling rate. Setting sampling rate to average sample difference.&#34;
 
 
 def sample_data_path(name):
@@ -274,7 +279,23 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
     x = x / screen_res * screen_size
     
     # convert the spatial coordinates to degree
-    return coords_to_degree(x, viewing_dist, screen_size)</code></pre>
+    return coords_to_degree(x, viewing_dist, screen_size)
+
+
+def _get_time(x, time, warn_sfreq=False):
+    &#34;&#34;&#34;Process times argument to sfreq/times array&#34;&#34;&#34;
+    # process time argument
+    if hasattr(time, &#39;__iter__&#39;):
+        # create sfreq from times array
+        times = np.array(time)
+        if warn_sfreq and (np.std(times[1:] - times[:-1]) &gt; 1e-5):
+            warnings.warn(WARN_SFREQ)
+        sfreq = 1. / np.mean(times[1:] - times[:-1]) 
+    else:
+        # create times array from sfreq
+        sfreq = time
+        times = sfreq_to_times(x, sfreq)
+    return times, sfreq</code></pre>
 </details>
 </section>
 <section>

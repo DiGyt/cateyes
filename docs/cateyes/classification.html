@@ -42,13 +42,7 @@ algorithms.
 import numpy as np
 import nslr_hmm
 from remodnav.clf import EyegazeClassifier
-from .utils import discrete_to_continuous, continuous_to_discrete
-
-import warnings
-
-WARN_SFREQ = &#34;\n\nIrregular sampling rate detected. This can lead to impaired &#34; \
-            &#34;performance with this classifier. Consider resampling your data to &#34; \
-            &#34;a fixed sampling rate. Setting sampling rate to average sample difference.&#34;
+from .utils import discrete_to_continuous, continuous_to_discrete, _get_time
 
 CLASSES = {nslr_hmm.FIXATION: &#39;Fixation&#39;,
            nslr_hmm.SACCADE: &#39;Saccade&#39;,
@@ -129,7 +123,7 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     
     # extract gaze and time array
     gaze_array = np.vstack([x, y]).T
-    time_array = np.array(time) if hasattr(time, &#39;__iter__&#39;) else np.arange(0, len(x), 1/time)
+    time_array, sfreq = _get_time(x, time)
     
     # classify using NSLR-HMM
     sample_class, seg, seg_class = nslr_hmm.classify_gaze(time_array, gaze_array,
@@ -239,14 +233,7 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     &#34;&#34;&#34;
     
     # process time argument
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # format and preprocess the data
     data = np.core.records.fromarrays([x, y], names=[&#34;x&#34;, &#34;y&#34;])
@@ -272,6 +259,121 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     # return
     if return_orig_output:
         return segments, classes, events
+    else:
+        return segments, classes
+
+    
+def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
+                   return_discrete=False, return_orig_output=False,
+                   weight_set=&#39;weights_1+2+3&#39;):
+    &#34;&#34;&#34;CNN-based saccade detection by Bellet et al. (2019).
+    
+    *Note:*
+    In order to use this function, install the cateyes uneye extension:
+    ```
+    pip install cateyes[uneye]
+    ```
+    
+    U&#39;n&#39;Eye employs a Convolutional Neural Network to classify
+    saccades. This function allows classification based on a CNN
+    pretrained by the U&#39;n&#39;Eye authors. U&#39;n&#39;Eye can separate 
+    between the following classes:
+    ```
+    Fixation, Saccade
+    ```
+    
+    For more information and documentation, see the [original implementation].
+    [original implementation]: https://github.com/berenslab/uneye
+    
+    For reference see:
+    
+    ---
+    Bellet, M. E., Bellet, J., Nienborg, H., Hafed, Z. M., &amp; Berens, P. 
+    (2019). Human-level saccade detection performance using deep neural 
+    networks. Journal of neurophysiology, 121(2), 646-661.
+    ---
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    time : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    min_sacc_dur : int
+        Minimum saccade duration (in ms) below which saccades will
+        be ignored, default=6ms.
+    min_sacc_dist : int
+        Minimum temporal distance (in ms) between two saccades for
+        merging of saccades, default=0.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the gaze array). Default=False.
+    return_orig_output : bool
+        If True, additionally return REMoDNaV&#39;s original segmentation 
+        events as output. Default=False.
+    weight_set : str
+        DNN weight set to use for prediction, can be (&#34;weights_1+2+3&#34;,
+        &#34;weights_Andersson&#34;, &#34;weights_dataset1&#34;, &#34;weights_dataset2&#34;,
+        &#34;weights_dataset3&#34;, &#34;weights_synthetic&#34;).
+        Default: &#39;weights_1+2+3&#39;.
+
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    probs : array
+        The original softmax probabilities returned by the U&#39;n&#39;Eye net.
+        Only returned if `return_orig_output = True`.
+        &#34;&#34;&#34;
+    # check installation
+    msg = &#34;&#34;&#34;
+    U&#39;n&#39;Eye extension is not installed.
+    Please reinstall cateyes with uneye extension, using:
+    
+    `pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]`
+    
+    Or by additionally installing our version of uneye:
+    
+    `pip install git+https://github.com/DiGyt/uneye.git`
+    &#34;&#34;&#34;
+    try:
+        from uneye import DNN
+    except ImportError:
+        raise ImportError(msg)
+
+    # process time argument
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
+    
+    # create and run model
+    model = DNN(weights_name=weight_set, sampfreq=sfreq,
+                min_sacc_dur=min_sacc_dur, min_sacc_dist=min_sacc_dist)
+    preds, probs = model.predict(x, y)
+    
+    # name classes
+    pred_dict = {0:&#34;Fixation&#34;, 1:&#34;Saccade&#34;}
+    classes = np.array([pred_dict[pred] for pred in preds])
+
+    # group consecutive classes to one segment
+    segments = np.zeros(len(x), dtype=int)
+    for idx in range(1, len(classes)):
+        if classes[idx] == classes[idx - 1]:
+            segments[idx] = segments[idx - 1]
+        else:
+            segments[idx] = segments[idx - 1] + 1
+
+    # return output
+    if return_discrete:
+        segments, classes = continuous_to_discrete(times, segments, classes)
+        
+    if return_orig_output:
+        return segments, classes, probs
     else:
         return segments, classes
 
@@ -322,20 +424,13 @@ def classify_velocity(x, y, time, threshold, return_discrete=False):
         The predicted class corresponding to each element in `segments`.
         &#34;&#34;&#34;
     # process time argument and calculate sample threshold
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
     vels = np.linalg.norm(gaze[:, 1:] - gaze[:, :-1], axis=0)
-    vels = np.concatenate([[0.], vels])
+    vels = np.concatenate([vels, [0.]])
     
     # define classes by threshold
     classes = np.empty(len(x), dtype=object)
@@ -410,14 +505,7 @@ def classify_dispersion(x, y, time, threshold, window_len, return_discrete=False
         return delta_x + delta_y
     
     # process time argument
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # infer number of samples from windowlen
     n_samples = int(sfreq * window_len)
@@ -524,14 +612,7 @@ def mad_velocity_thresh(x, y, time, th_0=200, return_past_threshs=False):
     &gt;&gt;&gt; segments, classes = classify_velocity(x, y, time, threshold)
     &#34;&#34;&#34;
     # process time argument and calculate sample threshold
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     # get init thresh per sample
     th_0 = th_0 / sfreq
     
@@ -691,7 +772,7 @@ times (discrete format), indicating the start of a new segment.</dd>
     
     # extract gaze and time array
     gaze_array = np.vstack([x, y]).T
-    time_array = np.array(time) if hasattr(time, &#39;__iter__&#39;) else np.arange(0, len(x), 1/time)
+    time_array, sfreq = _get_time(x, time)
     
     # classify using NSLR-HMM
     sample_class, seg, seg_class = nslr_hmm.classify_gaze(time_array, gaze_array,
@@ -877,14 +958,7 @@ Only returned if <code>return_orig_output = True</code>.</dd>
     &#34;&#34;&#34;
     
     # process time argument
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # format and preprocess the data
     data = np.core.records.fromarrays([x, y], names=[&#34;x&#34;, &#34;y&#34;])
@@ -910,6 +984,185 @@ Only returned if <code>return_orig_output = True</code>.</dd>
     # return
     if return_orig_output:
         return segments, classes, events
+    else:
+        return segments, classes</code></pre>
+</details>
+</dd>
+<dt id="cateyes.classification.classify_uneye"><code class="name flex">
+<span>def <span class="ident">classify_uneye</span></span>(<span>x, y, time, min_sacc_dur=6, min_sacc_dist=0, return_discrete=False, return_orig_output=False, weight_set='weights_1+2+3')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>CNN-based saccade detection by Bellet et al. (2019).</p>
+<p><em>Note:</em>
+In order to use this function, install the cateyes uneye extension:</p>
+<pre><code>pip install cateyes[uneye]
+</code></pre>
+<p>U'n'Eye employs a Convolutional Neural Network to classify
+saccades. This function allows classification based on a CNN
+pretrained by the U'n'Eye authors. U'n'Eye can separate
+between the following classes:</p>
+<pre><code>Fixation, Saccade
+</code></pre>
+<p>For more information and documentation, see the <a href="https://github.com/berenslab/uneye">original implementation</a>.</p>
+<p>For reference see:</p>
+<hr>
+<p>Bellet, M. E., Bellet, J., Nienborg, H., Hafed, Z. M., &amp; Berens, P.
+(2019). Human-level saccade detection performance using deep neural
+networks. Journal of neurophysiology, 121(2), 646-661.</p>
+<hr>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the x-axis of your gaze data.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>array</code> of <code>float</code></dt>
+<dd>A 1D-array representing the y-axis of your gaze data.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code> or <code>array</code> of <code>float</code></dt>
+<dd>Either a 1D-array representing the sampling times of the gaze
+arrays or a float/int that represents the sampling rate.</dd>
+<dt><strong><code>min_sacc_dur</code></strong> :&ensp;<code>int</code></dt>
+<dd>Minimum saccade duration (in ms) below which saccades will
+be ignored, default=6ms.</dd>
+<dt><strong><code>min_sacc_dist</code></strong> :&ensp;<code>int</code></dt>
+<dd>Minimum temporal distance (in ms) between two saccades for
+merging of saccades, default=0.</dd>
+<dt><strong><code>return_discrete</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, returns the output in discrete format, if False, in
+continuous format (matching the gaze array). Default=False.</dd>
+<dt><strong><code>return_orig_output</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, additionally return REMoDNaV's original segmentation
+events as output. Default=False.</dd>
+<dt><strong><code>weight_set</code></strong> :&ensp;<code>str</code></dt>
+<dd>DNN weight set to use for prediction, can be ("weights_1+2+3",
+"weights_Andersson", "weights_dataset1", "weights_dataset2",
+"weights_dataset3", "weights_synthetic").
+Default: 'weights_1+2+3'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>segments</code></strong> :&ensp;<code>array</code> of <code>(int, float)</code></dt>
+<dd>Either the event indices (continuous format) or the event
+times (discrete format), indicating the start of a new segment.</dd>
+<dt><strong><code>classes</code></strong> :&ensp;<code>array</code> of <code>str</code></dt>
+<dd>The predicted class corresponding to each element in <code>segments</code>.</dd>
+<dt><strong><code>probs</code></strong> :&ensp;<code>array</code></dt>
+<dd>The original softmax probabilities returned by the U'n'Eye net.
+Only returned if <code>return_orig_output = True</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
+                   return_discrete=False, return_orig_output=False,
+                   weight_set=&#39;weights_1+2+3&#39;):
+    &#34;&#34;&#34;CNN-based saccade detection by Bellet et al. (2019).
+    
+    *Note:*
+    In order to use this function, install the cateyes uneye extension:
+    ```
+    pip install cateyes[uneye]
+    ```
+    
+    U&#39;n&#39;Eye employs a Convolutional Neural Network to classify
+    saccades. This function allows classification based on a CNN
+    pretrained by the U&#39;n&#39;Eye authors. U&#39;n&#39;Eye can separate 
+    between the following classes:
+    ```
+    Fixation, Saccade
+    ```
+    
+    For more information and documentation, see the [original implementation].
+    [original implementation]: https://github.com/berenslab/uneye
+    
+    For reference see:
+    
+    ---
+    Bellet, M. E., Bellet, J., Nienborg, H., Hafed, Z. M., &amp; Berens, P. 
+    (2019). Human-level saccade detection performance using deep neural 
+    networks. Journal of neurophysiology, 121(2), 646-661.
+    ---
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    time : float or array of float
+        Either a 1D-array representing the sampling times of the gaze 
+        arrays or a float/int that represents the sampling rate.
+    min_sacc_dur : int
+        Minimum saccade duration (in ms) below which saccades will
+        be ignored, default=6ms.
+    min_sacc_dist : int
+        Minimum temporal distance (in ms) between two saccades for
+        merging of saccades, default=0.
+    return_discrete : bool
+        If True, returns the output in discrete format, if False, in
+        continuous format (matching the gaze array). Default=False.
+    return_orig_output : bool
+        If True, additionally return REMoDNaV&#39;s original segmentation 
+        events as output. Default=False.
+    weight_set : str
+        DNN weight set to use for prediction, can be (&#34;weights_1+2+3&#34;,
+        &#34;weights_Andersson&#34;, &#34;weights_dataset1&#34;, &#34;weights_dataset2&#34;,
+        &#34;weights_dataset3&#34;, &#34;weights_synthetic&#34;).
+        Default: &#39;weights_1+2+3&#39;.
+
+        
+    Returns
+    -------
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    classes : array of str
+        The predicted class corresponding to each element in `segments`.
+    probs : array
+        The original softmax probabilities returned by the U&#39;n&#39;Eye net.
+        Only returned if `return_orig_output = True`.
+        &#34;&#34;&#34;
+    # check installation
+    msg = &#34;&#34;&#34;
+    U&#39;n&#39;Eye extension is not installed.
+    Please reinstall cateyes with uneye extension, using:
+    
+    `pip install git+https://github.com/DiGyt/cateyes.git#egg=cateyes[uneye]`
+    
+    Or by additionally installing our version of uneye:
+    
+    `pip install git+https://github.com/DiGyt/uneye.git`
+    &#34;&#34;&#34;
+    try:
+        from uneye import DNN
+    except ImportError:
+        raise ImportError(msg)
+
+    # process time argument
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
+    
+    # create and run model
+    model = DNN(weights_name=weight_set, sampfreq=sfreq,
+                min_sacc_dur=min_sacc_dur, min_sacc_dist=min_sacc_dist)
+    preds, probs = model.predict(x, y)
+    
+    # name classes
+    pred_dict = {0:&#34;Fixation&#34;, 1:&#34;Saccade&#34;}
+    classes = np.array([pred_dict[pred] for pred in preds])
+
+    # group consecutive classes to one segment
+    segments = np.zeros(len(x), dtype=int)
+    for idx in range(1, len(classes)):
+        if classes[idx] == classes[idx - 1]:
+            segments[idx] = segments[idx - 1]
+        else:
+            segments[idx] = segments[idx - 1] + 1
+
+    # return output
+    if return_discrete:
+        segments, classes = continuous_to_discrete(times, segments, classes)
+        
+    if return_orig_output:
+        return segments, classes, probs
     else:
         return segments, classes</code></pre>
 </details>
@@ -1007,20 +1260,13 @@ times (discrete format), indicating the start of a new segment.</dd>
         The predicted class corresponding to each element in `segments`.
         &#34;&#34;&#34;
     # process time argument and calculate sample threshold
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     sample_thresh = threshold / sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
     vels = np.linalg.norm(gaze[:, 1:] - gaze[:, :-1], axis=0)
-    vels = np.concatenate([[0.], vels])
+    vels = np.concatenate([vels, [0.]])
     
     # define classes by threshold
     classes = np.empty(len(x), dtype=object)
@@ -1143,14 +1389,7 @@ times (discrete format), indicating the start of a new segment.</dd>
         return delta_x + delta_y
     
     # process time argument
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     
     # infer number of samples from windowlen
     n_samples = int(sfreq * window_len)
@@ -1307,14 +1546,7 @@ if <code>return_past_thresholds</code> is True.</dd>
     &gt;&gt;&gt; segments, classes = classify_velocity(x, y, time, threshold)
     &#34;&#34;&#34;
     # process time argument and calculate sample threshold
-    if hasattr(time, &#39;__iter__&#39;):
-        times = np.array(time)
-        if np.std(times[1:] - times[:-1]) &gt; 1e-5:
-            warnings.warn(WARN_SFREQ)
-        sfreq = 1 / np.mean(times[1:] - times[:-1]) 
-    else:
-        times = np.arange(0, len(x), 1 / time)
-        sfreq = time
+    times, sfreq = _get_time(x, time, warn_sfreq=True)
     # get init thresh per sample
     th_0 = th_0 / sfreq
     
@@ -1369,9 +1601,10 @@ if <code>return_past_thresholds</code> is True.</dd>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="cateyes.classification.classify_nslr_hmm" href="#cateyes.classification.classify_nslr_hmm">classify_nslr_hmm</a></code></li>
 <li><code><a title="cateyes.classification.classify_remodnav" href="#cateyes.classification.classify_remodnav">classify_remodnav</a></code></li>
+<li><code><a title="cateyes.classification.classify_uneye" href="#cateyes.classification.classify_uneye">classify_uneye</a></code></li>
 <li><code><a title="cateyes.classification.classify_velocity" href="#cateyes.classification.classify_velocity">classify_velocity</a></code></li>
 <li><code><a title="cateyes.classification.classify_dispersion" href="#cateyes.classification.classify_dispersion">classify_dispersion</a></code></li>
 <li><code><a title="cateyes.classification.mad_velocity_thresh" href="#cateyes.classification.mad_velocity_thresh">mad_velocity_thresh</a></code></li>
