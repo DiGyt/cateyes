@@ -45,7 +45,6 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     
     For more information and documentation, see the [pupil-labs implementation].
     [pupil-labs implementation]: https://github.com/pupil-labs/nslr-hmm
-    
     For reference see:
     
     ---
@@ -142,8 +141,6 @@ def classify_remodnav(x, y, time, px2deg, return_discrete=False, return_orig_out
     
     For more information and documentation, see the [original implementation].
     [original implementation]: https://github.com/psychoinformatics-de/remodnav
-    
-    
     For reference see:
     
     ---
@@ -239,7 +236,9 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     
     .. note::
         In order to use this function, install the cateyes uneye extension:
-        ```pip install cateyes[uneye]```
+        ```
+        pip install cateyes[uneye]
+        ```
     
     U'n'Eye employs a Convolutional Neural Network to classify
     saccades. This function allows classification based on a CNN
@@ -251,7 +250,6 @@ def classify_uneye(x, y, time, min_sacc_dur=6, min_sacc_dist=0,
     
     For more information and documentation, see the [original implementation].
     [original implementation]: https://github.com/berenslab/uneye
-    
     For reference see:
     
     ---
@@ -394,11 +392,12 @@ def classify_velocity(x, y, time, threshold=None, return_discrete=False):
         """
     # process time argument and calculate sample threshold
     times, sfreq = _get_time(x, time, warn_sfreq=True)
-    sample_thresh = threshold / sfreq
     
     # find threshold if threshold is None
     if threshold == None:
         threshold = mad_velocity_thresh(x, y, times)
+    # express thresh in terms of freq
+    sample_thresh = threshold / sfreq
     
     # calculate movement velocities
     gaze = np.stack([x, y])
