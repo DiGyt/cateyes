@@ -1,3 +1,7 @@
+include cateyes
+include cateyes/classification.py
+include cateyes/utils.py
+include cateyes/visualization.py
 include cateyes/data/test_data_full.csv
 include cateyes/data/example_data.csv
 include cateyes/data/example_events.csv
