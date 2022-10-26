@@ -17,7 +17,8 @@ CLASSES = {nslr_hmm.FIXATION: 'Fixation',
            nslr_hmm.SACCADE: 'Saccade',
            nslr_hmm.SMOOTH_PURSUIT: 'Smooth Pursuit',
            nslr_hmm.PSO: 'PSO',
-           None:"None",}
+           None: "None",
+           }
 
 REMODNAV_CLASSES = {"FIXA":"Fixation", "SACC":"Saccade",
                     "ISAC":"Saccade (ISI)", "PURS":"Smooth Pursuit",
@@ -101,16 +102,17 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     segments = [s.t[0] for s in seg.segments]
     classes = seg_class
     
+    # convert to the strings
+    classes = [CLASSES[i] for i in classes]
+    
     # convert them if continuous series wanted
     if return_discrete == False:
         segments, classes = discrete_to_continuous(time_array, segments, classes)
     
-    # add the prediction to our dataframe
-    classes = [CLASSES[i] for i in classes]
-    
     if return_orig_output:
         # create dictionary from it
-        segment_dict = {"sample_class": sample_class, "segmentation": seg, "seg_class":seg_class}
+        segment_dict = {"sample_class": sample_class, "segmentation": seg,
+                        "seg_class":seg_class}
         return segments, classes, segment_dict
     else:
         return segments, classes

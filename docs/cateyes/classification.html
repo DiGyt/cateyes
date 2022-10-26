@@ -48,7 +48,8 @@ CLASSES = {nslr_hmm.FIXATION: &#39;Fixation&#39;,
            nslr_hmm.SACCADE: &#39;Saccade&#39;,
            nslr_hmm.SMOOTH_PURSUIT: &#39;Smooth Pursuit&#39;,
            nslr_hmm.PSO: &#39;PSO&#39;,
-           None:&#34;None&#34;,}
+           None: &#34;None&#34;,
+           }
 
 REMODNAV_CLASSES = {&#34;FIXA&#34;:&#34;Fixation&#34;, &#34;SACC&#34;:&#34;Saccade&#34;,
                     &#34;ISAC&#34;:&#34;Saccade (ISI)&#34;, &#34;PURS&#34;:&#34;Smooth Pursuit&#34;,
@@ -132,16 +133,17 @@ def classify_nslr_hmm(x, y, time, return_discrete=False, return_orig_output=Fals
     segments = [s.t[0] for s in seg.segments]
     classes = seg_class
     
+    # convert to the strings
+    classes = [CLASSES[i] for i in classes]
+    
     # convert them if continuous series wanted
     if return_discrete == False:
         segments, classes = discrete_to_continuous(time_array, segments, classes)
     
-    # add the prediction to our dataframe
-    classes = [CLASSES[i] for i in classes]
-    
     if return_orig_output:
         # create dictionary from it
-        segment_dict = {&#34;sample_class&#34;: sample_class, &#34;segmentation&#34;: seg, &#34;seg_class&#34;:seg_class}
+        segment_dict = {&#34;sample_class&#34;: sample_class, &#34;segmentation&#34;: seg,
+                        &#34;seg_class&#34;:seg_class}
         return segments, classes, segment_dict
     else:
         return segments, classes
@@ -782,16 +784,17 @@ times (discrete format), indicating the start of a new segment.</dd>
     segments = [s.t[0] for s in seg.segments]
     classes = seg_class
     
+    # convert to the strings
+    classes = [CLASSES[i] for i in classes]
+    
     # convert them if continuous series wanted
     if return_discrete == False:
         segments, classes = discrete_to_continuous(time_array, segments, classes)
     
-    # add the prediction to our dataframe
-    classes = [CLASSES[i] for i in classes]
-    
     if return_orig_output:
         # create dictionary from it
-        segment_dict = {&#34;sample_class&#34;: sample_class, &#34;segmentation&#34;: seg, &#34;seg_class&#34;:seg_class}
+        segment_dict = {&#34;sample_class&#34;: sample_class, &#34;segmentation&#34;: seg,
+                        &#34;seg_class&#34;:seg_class}
         return segments, classes, segment_dict
     else:
         return segments, classes</code></pre>

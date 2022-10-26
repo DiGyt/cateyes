@@ -18,6 +18,6 @@ from .classification import (classify_nslr_hmm, classify_remodnav,
                              classify_velocity, mad_velocity_thresh)
 from .utils import (discrete_to_continuous, continuous_to_discrete,
                     sfreq_to_times, coords_to_degree, pixel_to_degree, 
-                    sample_data_path)
+                    get_segment_distance, sample_data_path)
 from .visualization import (plot_segmentation, plot_trajectory,
                             plot_nslr_segmentation)

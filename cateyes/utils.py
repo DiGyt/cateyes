@@ -14,6 +14,10 @@ WARN_SFREQ = "\n\nIrregular sampling rate detected. This can lead to impaired " 
             "performance with this classifier. Consider resampling your data to " \
             "a fixed sampling rate. Setting sampling rate to average sample difference."
 
+WARN_CONT = "\n\nThe discrete_times array passed to continuous_to_discrete " \
+            "has the same length as the times array. Are you sure that your " \
+            "discrete_times and discrete_values are not already continuous? " \
+            "If they are, applying this function can lead to miscalculations." 
 
 def sample_data_path(name):
     """return the static path to a CatEyes sample dataset.
@@ -68,17 +72,26 @@ def discrete_to_continuous(times, discrete_times, discrete_values):
     >>> discrete_to_continuous(times, dis_times, dis_values)
     array([0., 1., 1.]), array([None, 'Saccade', 'Saccade'])
     """
+    # check to prevent passing continuous array
+    if len(discrete_times) == len(times):
+        warnings.warn(WARN_CONT)
+    #TODO: Items will be dropped if 2 discrete events fall on one sample.
+    # how to deal with this?
     
     # sort the discrete events by time
-    time_val_sorted = sorted(zip(discrete_times, discrete_values))
+    time_val_sorted = sorted(zip(discrete_times, discrete_values),
+                            key= lambda x:x[0])
     
     # fill the time series with indices and values
     indices = np.zeros(len(times))
-    values = np.empty(len(times), dtype=object)
+    shape, dtype = [(x.shape, x.dtype) for x in [np.array(discrete_values)]][0]
+    values = np.full((len(times),) + shape[1:], None).astype(dtype)
     for idx, (dis_time, dis_val) in enumerate(time_val_sorted):
-        selected = [times >= dis_time]
+        selected = times >= dis_time
         indices[selected] = idx + 1
         values[selected] = dis_val
+        #for i in np.where(selected)[0]:  # this allows multidim arrays to pass
+        #    values[i] = dis_val
         
     return indices, values
 
@@ -109,6 +122,10 @@ def continuous_to_discrete(times, indices, values):
         corresponding to `discrete_times`. Is the same length as 
         `discrete_times`.
     """
+    # check to prevent passing discrete array
+    if any([len(times) != i for i in (len(indices), len(values))]):
+        raise ValueError("Indices and values must have the " \
+                         "same length as the times array.")
     
     # fill the discrete lists with events
     discrete_times = []
@@ -121,6 +138,91 @@ def continuous_to_discrete(times, indices, values):
         cur_idx = idx
     
     return discrete_times, discrete_values
+
+
+def get_segment_distance(x, y, times, segments, from_discrete=False,
+                        return_start_end_pos=False):
+    """Calculate the movement distance from start to end of a segment.
+    This function can be used to calculate Saccade distance.
+    
+    Parameters
+    ----------
+    x : array of float
+        A 1D-array representing the x-axis of your gaze data.
+    y : array of float
+        A 1D-array representing the y-axis of your gaze data.
+    times : array of (float, int)
+        A 1D-array representing the sampling times of the continuous 
+        eyetracking recording.
+    segments : array of (int, float)
+        Either the event indices (continuous format) or the event 
+        times (discrete format), indicating the start of a new segment.
+    from_discrete : bool
+        If True, assumes that `segments` is a discrete array and will
+        also return a discrete array. Else, will treat `segments` as
+        continuous array and return a continuous array. Default=False.
+    return_start_end_pos : bool
+        If True, additionally return the initial and final position of
+        the gaze array during each segment. Default=False.
+        
+        
+    Returns
+    -------
+    distances : array of float
+        Array of length len(times) corresponding to the distance
+        between the first and the last sample in a segment.
+    start_pos : array of float
+        A 2D array of shape [n_events, 2] (discrete) or 
+        [n_samples, 2] (continuous) containing the initial gaze 
+        positions for each segment. The second dimension of the 
+        array corresponds to the x and y axis (in that order).
+        Only returned if `return_start_end_pos=True`.
+    end_pos : array of float
+        A 2D array of shape [n_events, 2] (discrete) or 
+        [n_samples, 2] (continuous) containing the final gaze 
+        positions for each segment. The second dimension of the 
+        array corresponds to the x and y axis (in that order).
+        Only returned if `return_start_end_pos=True`.
+    """
+    # check if continuous segments match length
+    msg = "For continuous segments, len(segments) must be equal to " \
+    "len(times). If you are using a discrete segment array, please " \
+    "pass `discrete=True` as an argument"
+    if not from_discrete:
+        if len(segments) != len(times):
+            raise ValueError(msg)
+
+        # make discrete if continuous
+        segments, _ = continuous_to_discrete(times, segments, x)
+
+    # sort the discrete events by time
+    seg_times = sorted(segments)
+    
+    # loop over segments to find start and end positions
+    start_pos, end_pos = np.zeros([2, len(seg_times), 2])  # 2 2D arrays
+    nxt_seg_times = np.concatenate([seg_times[1:], [np.inf]])
+    for idx, (cur, nxt) in enumerate(zip(seg_times, nxt_seg_times)):
+
+        # select the segment in question
+        selected = np.logical_and(times >= cur, times <= nxt)
+        sel_x, sel_y = x[selected], y[selected]
+
+        # add start positions and end positions to array
+        start_pos[idx] = sel_x[0], sel_y[0]
+        end_pos[idx] = sel_x[-1], sel_y[-1]
+
+    #calculate distances
+    distances = np.linalg.norm(end_pos - start_pos, axis=1)
+
+    # return_start_end_pos
+    out = (distances,)
+    if return_start_end_pos:
+        out += (start_pos, end_pos)
+
+    # make continuous if necessary
+    if not from_discrete:
+        out = tuple(discrete_to_continuous(times, seg_times, i)[1] for i in out)
+    return out if return_start_end_pos else out[0]
 
 
 def sfreq_to_times(gaze_array, sfreq, start_time=0):
