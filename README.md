@@ -1,7 +1,7 @@
 <img src="/docs/files/imgs/cateye_header.png" alt="CatEyes logo" height="100"/>
 
 ___
-### Simplified Categorization for Eye Tracking in Python
+### Categorization for Eye Tracking - simplified
 
 - [Introduction](#introduction)
 - [Installation](#installation)
@@ -11,7 +11,7 @@ ___
 
 ## Introduction
 
-This repository was developed for Peter König's Neurobiopsychology Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a unified, simplistic, and elegant way of handling eye tracking data.
+This Python Toolbox was developed for Peter König's Neurobiopsychology Lab at the Institute of Cognitive Science, Osnabrück. Its aim is to provide easy access to different automated gaze classification algorithms and to generate a unified, simplistic, and elegant way of handling eye tracking data.
 
 Currently available gaze classification algorithms are:
 - [REMoDNaV](https://digyt.github.io/cateyes/cateyes/classification.html#cateyes.classification.classify_remodnav): Dar *, A. H., Wagner *, A. S. & Hanke, M. (2019). REMoDNaV: Robust Eye Movement Detection for Natural Viewing. bioRxiv. DOI: 10.1101/619254
