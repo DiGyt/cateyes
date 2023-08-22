@@ -343,7 +343,7 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
         if (not lengthy) or (lengthy and len(x) != len(screen_res)):
             raise ValueError(msg_1)
     else:
-        if lengthy and len(screen_max) != 1:
+        if lengthy and len(screen_res) != 1:
             raise ValueError(msg_2)
 
     # convert from pixels to spatial unit
