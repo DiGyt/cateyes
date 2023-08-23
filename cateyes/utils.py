@@ -299,7 +299,7 @@ def coords_to_degree(x, viewing_dist, screen_max, screen_min=None):
     
     # convert the x array to degree using the arctan
     coord_range = np.array(screen_max) - np.array(screen_min)
-    coord_range = coord_range.reshape(-1, 1)
+    coord_range = coord_range[..., np.newaxis]
     x = x - coord_range / 2.  # 0 should be at the center
     x = np.degrees(np.arctan2(x, viewing_dist))
     return x
@@ -347,9 +347,8 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
             raise ValueError(msg_2)
 
     # convert from pixels to spatial unit
-    screen_size = np.array(screen_size).reshape(-1, 1)
-    screen_res = np.array(screen_res).reshape(-1, 1)
-    x = x / screen_res * screen_size
+    x /= np.array(screen_res)[..., np.newaxis]
+    x *= np.array(screen_size)[..., np.newaxis]
     
     # convert the spatial coordinates to degree
     return coords_to_degree(x, viewing_dist, screen_size)
