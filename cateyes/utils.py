@@ -317,15 +317,16 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
         dimensions (e.g. x, y) and the second to the time dimension.
     viewing_dist : float
         The distance between the eye and the screen, measured in the 
-        same unit as `screen_size`.
+        same unit as `screen_size` (e.g. inch or cm).
     screen_size : float, tuple/list of float
-        The screen size measured in the same unit as `screen_res`. 
-        If `x` is a 2D array, `screen_size` must be an iterable of the
-        same length as `x`.
+        The screen size measured in the same unit as `screen_res` (e.g. 
+        inch or cm). If `x` is a 2D array, `screen_size` must be a
+        list/array of the same length as `x`
     screen_res : float, tuple/list of float
-        The screen resolution measured in the same unit as `screen_size`. 
-        If `x` is a 2D array, `screen_res` must be an iterable of the
-        same length as `x`.
+        The screen resolution measured as a total of `screen_size` 
+        (e.g. total number of pixels over one axis). If `x` is a 
+        2D array, `screen_res` must be a list/array of the same 
+        length as `x`.
         
     Returns
     -------
