@@ -76,6 +76,7 @@ CatEyes' documentation is created using [pdoc3](https://pdoc3.github.io/pdoc/) a
 
 <!-- 
 Note for myself: build the documentation with:
+pip install pdoc3==0.9.0
 cd cateye_head_dir
 pdoc3 --html --output-dir docs cateyes -f -c sort_identifiers=False
 
