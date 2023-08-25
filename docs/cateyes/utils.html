@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="generator" content="pdoc 0.9.0" />
 <title>cateyes.utils API documentation</title>
 <meta name="description" content="cateyes.utils provides utility functions to convert and handle data." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -328,7 +328,7 @@ def coords_to_degree(x, viewing_dist, screen_max, screen_min=None):
     
     # convert the x array to degree using the arctan
     coord_range = np.array(screen_max) - np.array(screen_min)
-    coord_range = coord_range.reshape(-1, 1)
+    coord_range = coord_range[..., np.newaxis]
     x = x - coord_range / 2.  # 0 should be at the center
     x = np.degrees(np.arctan2(x, viewing_dist))
     return x
@@ -346,15 +346,16 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
         dimensions (e.g. x, y) and the second to the time dimension.
     viewing_dist : float
         The distance between the eye and the screen, measured in the 
-        same unit as `screen_size`.
+        same unit as `screen_size` (e.g. inch or cm).
     screen_size : float, tuple/list of float
-        The screen size measured in the same unit as `screen_res`. 
-        If `x` is a 2D array, `screen_size` must be an iterable of the
-        same length as `x`.
+        The screen size measured in the same unit as `screen_res` (e.g. 
+        inch or cm). If `x` is a 2D array, `screen_size` must be a
+        list/array of the same length as `x`
     screen_res : float, tuple/list of float
-        The screen resolution measured in the same unit as `screen_size`. 
-        If `x` is a 2D array, `screen_res` must be an iterable of the
-        same length as `x`.
+        The screen resolution measured as a total of `screen_size` 
+        (e.g. total number of pixels over one axis). If `x` is a 
+        2D array, `screen_res` must be a list/array of the same 
+        length as `x`.
         
     Returns
     -------
@@ -372,13 +373,12 @@ def pixel_to_degree(x, viewing_dist, screen_size, screen_res):
         if (not lengthy) or (lengthy and len(x) != len(screen_res)):
             raise ValueError(msg_1)
     else:
-        if lengthy and len(screen_max) != 1:
+        if lengthy and len(screen_res) != 1:
             raise ValueError(msg_2)
 
     # convert from pixels to spatial unit
-    screen_size = np.array(screen_size).reshape(-1, 1)
-    screen_res = np.array(screen_res).reshape(-1, 1)
-    x = x / screen_res * screen_size
+    x /= np.array(screen_res)[..., np.newaxis]
+    x *= np.array(screen_size)[..., np.newaxis]
     
     # convert the spatial coordinates to degree
     return coords_to_degree(x, viewing_dist, screen_size)
@@ -884,7 +884,7 @@ same unit as <code>screen_max</code> and <code>screen_min</code>.</dd>
     
     # convert the x array to degree using the arctan
     coord_range = np.array(screen_max) - np.array(screen_min)
-    coord_range = coord_range.reshape(-1, 1)
+    coord_range = coord_range[..., np.newaxis]
     x = x - coord_range / 2.  # 0 should be at the center
     x = np.degrees(np.arctan2(x, viewing_dist))
     return x</code></pre>
@@ -904,15 +904,16 @@ If a 2-D array, the first dimension must correspond to the gaze
 dimensions (e.g. x, y) and the second to the time dimension.</dd>
 <dt><strong><code>viewing_dist</code></strong> :&ensp;<code>float</code></dt>
 <dd>The distance between the eye and the screen, measured in the
-same unit as <code>screen_size</code>.</dd>
+same unit as <code>screen_size</code> (e.g. inch or cm).</dd>
 <dt><strong><code>screen_size</code></strong> :&ensp;<code>float, tuple/list</code> of <code>float</code></dt>
-<dd>The screen size measured in the same unit as <code>screen_res</code>.
-If <code>x</code> is a 2D array, <code>screen_size</code> must be an iterable of the
-same length as <code>x</code>.</dd>
+<dd>The screen size measured in the same unit as <code>screen_res</code> (e.g.
+inch or cm). If <code>x</code> is a 2D array, <code>screen_size</code> must be a
+list/array of the same length as <code>x</code></dd>
 <dt><strong><code>screen_res</code></strong> :&ensp;<code>float, tuple/list</code> of <code>float</code></dt>
-<dd>The screen resolution measured in the same unit as <code>screen_size</code>.
-If <code>x</code> is a 2D array, <code>screen_res</code> must be an iterable of the
-same length as <code>x</code>.</dd>
+<dd>The screen resolution measured as a total of <code>screen_size</code>
+(e.g. total number of pixels over one axis). If <code>x</code> is a
+2D array, <code>screen_res</code> must be a list/array of the same
+length as <code>x</code>.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -935,15 +936,16 @@ same length as <code>x</code>.</dd>
         dimensions (e.g. x, y) and the second to the time dimension.
     viewing_dist : float
         The distance between the eye and the screen, measured in the 
-        same unit as `screen_size`.
+        same unit as `screen_size` (e.g. inch or cm).
     screen_size : float, tuple/list of float
-        The screen size measured in the same unit as `screen_res`. 
-        If `x` is a 2D array, `screen_size` must be an iterable of the
-        same length as `x`.
+        The screen size measured in the same unit as `screen_res` (e.g. 
+        inch or cm). If `x` is a 2D array, `screen_size` must be a
+        list/array of the same length as `x`
     screen_res : float, tuple/list of float
-        The screen resolution measured in the same unit as `screen_size`. 
-        If `x` is a 2D array, `screen_res` must be an iterable of the
-        same length as `x`.
+        The screen resolution measured as a total of `screen_size` 
+        (e.g. total number of pixels over one axis). If `x` is a 
+        2D array, `screen_res` must be a list/array of the same 
+        length as `x`.
         
     Returns
     -------
@@ -961,13 +963,12 @@ same length as <code>x</code>.</dd>
         if (not lengthy) or (lengthy and len(x) != len(screen_res)):
             raise ValueError(msg_1)
     else:
-        if lengthy and len(screen_max) != 1:
+        if lengthy and len(screen_res) != 1:
             raise ValueError(msg_2)
 
     # convert from pixels to spatial unit
-    screen_size = np.array(screen_size).reshape(-1, 1)
-    screen_res = np.array(screen_res).reshape(-1, 1)
-    x = x / screen_res * screen_size
+    x /= np.array(screen_res)[..., np.newaxis]
+    x *= np.array(screen_size)[..., np.newaxis]
     
     # convert the spatial coordinates to degree
     return coords_to_degree(x, viewing_dist, screen_size)</code></pre>
@@ -1004,7 +1005,7 @@ same length as <code>x</code>.</dd>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.0</a>.</p>
 </footer>
 </body>
 </html>
