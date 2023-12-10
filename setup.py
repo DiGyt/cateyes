@@ -43,11 +43,11 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=REQS + NSLR_REQS,
+    install_requires=REQS,
     extras_require={
-        #"nslr_hmm":NSLR_REQS,
+        "nslr_hmm":NSLR_REQS,
         "uneye":UNEYE_REQS,
-        #"full":NSLR_REQS + UNEYE_REQS,
+        "full":NSLR_REQS + UNEYE_REQS,
     },
     #dependency_links= NSLR_REQS + UNEYE_REQS,
 )
