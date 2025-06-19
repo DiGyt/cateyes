@@ -2,7 +2,7 @@
 
 ___
 > [!WARNING]  
-> This toolbox is currently not maintained actively. I would love to, but we all know that the incentives set for scientists don't really encourage work like this. :')
+> This toolbox is currently not actively maintained. I would love to, but we all know that the incentives set for scientists don't really encourage work like this. :')
 ___
 ### Categorization for Eye Tracking - simplified
 
