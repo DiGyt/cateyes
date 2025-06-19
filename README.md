@@ -1,6 +1,9 @@
 <img src="/docs/files/imgs/cateye_header.png" alt="CatEyes logo" height="100"/>
 
 ___
+> [!WARNING]  
+> This toolbox is currently not maintained actively. I would love to, but we all know that the incentives set for scientists don't really encourage work like this. :')
+___
 ### Categorization for Eye Tracking - simplified
 
 - [Introduction](#introduction)
