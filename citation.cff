@@ -1,7 +1,5 @@
 cff-version: 1.2.0
 message: "If you use this software, feel free to cite it:"
-type: softward
-
 authors:
 - family-names: "Gütlin"
   given-names: "Dirk"
