@@ -7,7 +7,7 @@ authors:
   given-names: "Dirk"
   orcid: "https://orcid.org/0000-0003-3822-896X"
 title: "CatEyes"
-version: 0.0.6
+version: 0.0.3
 date-released: 2021-12-18
 doi: "https://doi.org/10.5281/zenodo.21914294"
 url: "https://github.com/DiGyt/cateyes"
