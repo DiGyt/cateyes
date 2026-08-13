@@ -26,7 +26,7 @@ UNEYE_REQS = [
 
 setup(
     name = "cateyes",
-    version = "0.0.5",
+    version = "0.0.6",
 
     author = "Dirk Gütlin",
     author_email = "dirk.guetlin@gmail.com",
